@@ -19,9 +19,9 @@ contract EtherlessSmart {
 
     //events
     //event run
-    event runRequest(string funcname, string param, string id);
+    event runRequest(string funcname, string param, string indexed id);
     //event response
-    event response(string _result, string id);
+    event response(string result, string indexed id);
 
     // functions to check list (availableFunctions)
     //getList -> returns the full list of available functions
@@ -50,7 +50,9 @@ contract EtherlessSmart {
       delete availableFunctions[toRemove];
       for (uint index = 0; index < functionNames.length; index++) {
           if(uint(keccak256(abi.encodePacked(functionNames[index]))) == uint(keccak256(abi.encodePacked(toRemove)))){
-              delete functionNames[index]; //check if length is correct after deleting an element
+              //delete functionNames[index]; //check if length is correct after deleting an element
+              functionNames[index] = functionNames[functionNames.length - 1];
+              functionNames.pop();
           }
       }
     }
@@ -58,8 +60,15 @@ contract EtherlessSmart {
 // main commands
     //runFunction -> requests execution of the function (call to existsFunction - requests payment - check payment - emit executeFunction event)
     function runFunction(string memory funcName, string memory param, string memory id) public payable {
+      require(existsFunction(funcName), "The function you're looking for does not exist! :'(");
       data = funcName;
+      uint256 funcPrice = availableFunctions[funcName].price;
+      address payable funcDev = availableFunctions[funcName].developer;
+
+      require(msg.value >= funcPrice, "Insufficient amount sent! :'(");
       balance += msg.value;
+
+      sendAmount(funcDev, funcPrice);
       emit runRequest(funcName, param, id);
     }
 
@@ -76,5 +85,10 @@ contract EtherlessSmart {
 
    function getData() public view returns(string memory){
      return data;
+   }
+
+   function sendAmount(address payable to, uint256 amount) public {
+       balance -= amount; //remainder fom payment
+       to.transfer(amount);
    }
 }
