@@ -7,6 +7,7 @@ pragma experimental ABIEncoderV2;
 //deleteFunction -> delete one of the caller's owned functions in AWS
 
 contract EtherlessSmart {
+  address ownerAddress;
   string data = "hello!";
   uint256 balance = 0;
 
@@ -26,6 +27,15 @@ contract EtherlessSmart {
   event runRequest(string funcname, string param, string indexed id);
   //event response
   event response(string result, string indexed id);
+
+  constructor() public {
+    ownerAddress = msg.sender;
+  }
+
+  modifier onlyOwner(address _invokedFrom) {
+  require(_invokedFrom == ownerAddress);
+  _;
+}
 
   // functions to check list (availableFunctions)
   //getList -> returns the full list of available functions
@@ -76,7 +86,7 @@ contract EtherlessSmart {
     emit runRequest(funcName, param, id);
   }
 
-  function resultFunction(string memory result, string memory id) public {
+  function resultFunction(string memory result, string memory id) onlyOwner(msg.sender) public {
     emit response(result, id);
   }
   //deployFunction -> deployes the user developed function
