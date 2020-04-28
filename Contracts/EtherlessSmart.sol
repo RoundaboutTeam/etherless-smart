@@ -34,7 +34,7 @@ contract EtherlessSmart {
   }
 
   modifier onlyOwner(address _invokedFrom) {
-    require(_invokedFrom == ownerAddress);
+    require(_invokedFrom == ownerAddress, "You are not the owner of the contract!");
     _;
   }
 
@@ -90,7 +90,7 @@ contract EtherlessSmart {
     return requestId;
   }
 
-  function resultFunction(string memory result, uint256 id) onlyOwner(msg.sender) public {
+  function resultFunction(string memory result, uint256 id) public onlyOwner(msg.sender){
     emit response(result, id);
   }
 
