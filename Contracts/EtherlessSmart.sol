@@ -10,6 +10,7 @@ contract EtherlessSmart {
   address ownerAddress;
   string data = "hello!";
   uint256 balance = 0;
+  uint256 requestId; //incremented at every run request
 
   struct jsFunction {
     string name;
@@ -24,18 +25,18 @@ contract EtherlessSmart {
 
   //events
   //event run
-  event runRequest(string funcname, string param, string indexed id);
+  event runRequest(string funcname, string param, uint256 indexed id);
   //event response
-  event response(string result, string indexed id);
+  event response(string result, uint256 indexed id);
 
   constructor() public {
     ownerAddress = msg.sender;
   }
 
   modifier onlyOwner(address _invokedFrom) {
-  require(_invokedFrom == ownerAddress);
-  _;
-}
+    require(_invokedFrom == ownerAddress);
+    _;
+  }
 
   // functions to check list (availableFunctions)
   //getList -> returns the full list of available functions
@@ -56,7 +57,7 @@ contract EtherlessSmart {
   function addFunction(string memory name, uint256 price) public {
     address payable developer = msg.sender;
     availableFunctions[name] = jsFunction(name, price, developer, true);
-    functionNames.push(name); //check if length is correct after adding an element
+    functionNames.push(name);
   }
 
   //removeFunction -> remove function from availableFunctions list
@@ -73,7 +74,7 @@ contract EtherlessSmart {
 
 // main commands
   //runFunction -> requests execution of the function (call to existsFunction - requests payment - check payment - emit executeFunction event)
-  function runFunction(string memory funcName, string memory param, string memory id) public payable {
+  function runFunction(string memory funcName, string memory param) public payable  returns (uint256) {
     require(existsFunction(funcName), "The function you're looking for does not exist! :'(");
     data = funcName;
     uint256 funcPrice = availableFunctions[funcName].price;
@@ -83,15 +84,15 @@ contract EtherlessSmart {
     balance += msg.value;
 
     sendAmount(funcDev, funcPrice);
-    emit runRequest(funcName, param, id);
+
+    getNewId();
+    emit runRequest(funcName, param, requestId);
+    return requestId;
   }
 
-  function resultFunction(string memory result, string memory id) onlyOwner(msg.sender) public {
+  function resultFunction(string memory result, uint256 id) onlyOwner(msg.sender) public {
     emit response(result, id);
   }
-  //deployFunction -> deployes the user developed function
-  //deleteFunction -> delete one of the caller's owned functions
-  //...
 
   function getBalance() public view returns (uint256){
     return balance;
@@ -102,7 +103,11 @@ contract EtherlessSmart {
  }
 
  function sendAmount(address payable to, uint256 amount) public {
-   balance -= amount; //remainder fom payment
+   balance -= amount; //remainder from payment
    to.transfer(amount);
+ }
+
+ function getNewId() private returns (uint256){ //increments requestId
+   return requestId++;
  }
 }
