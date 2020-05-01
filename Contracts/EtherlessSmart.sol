@@ -1,5 +1,4 @@
 pragma solidity >=0.4.22 <0.7.0;
-pragma experimental ABIEncoderV2;
 
 //TO DO//
 //getFuncInfo -> returns all the info stored in the mapping
@@ -8,14 +7,13 @@ pragma experimental ABIEncoderV2;
 
 contract EtherlessSmart {
   address ownerAddress;
-  string data = "hello!";
   uint256 balance = 0;
   uint256 requestId; //incremented at every run request
 
   struct jsFunction {
     string name;
     //maybe add function signature!
-    uint256 price; //decide unit of measurement (probably wei for ease of use and not having 0.0000...00something ether)
+    uint256 price; // wei
     address payable developer;
     bool exists;
   }
@@ -31,6 +29,7 @@ contract EtherlessSmart {
 
   constructor() public {
     ownerAddress = msg.sender;
+    requestId = 0;
   }
 
   modifier onlyOwner(address _invokedFrom) {
@@ -84,7 +83,7 @@ contract EtherlessSmart {
   function removeFunction(string memory toRemove) public {
     delete availableFunctions[toRemove];
     for (uint index = 0; index < functionNames.length; index++) {
-        if(uint(keccak256(abi.encodePacked(bytes32ToStr(functionNames[index])))) == uint(keccak256(abi.encodePacked(toRemove)))){
+        if(functionNames[index] == stringToBytes(toRemove)){
             //delete functionNames[index]; //check if length is correct after deleting an element
             functionNames[index] = functionNames[functionNames.length - 1];
             functionNames.pop();
@@ -94,9 +93,8 @@ contract EtherlessSmart {
 
 //MAIN COMMANDS
   //runFunction -> requests execution of the function
-  function runFunction(string memory funcName, string memory param) public payable  returns (uint256) {
+  function runFunction(string memory funcName, string memory param) public payable {
     require(existsFunction(funcName), "The function you're looking for does not exist! :'(");
-    data = funcName;
     uint256 funcPrice = availableFunctions[funcName].price;
     address payable funcDev = availableFunctions[funcName].developer;
 
@@ -107,7 +105,6 @@ contract EtherlessSmart {
 
     getNewId();
     emit runRequest(funcName, param, requestId);
-    return requestId;
   }
 
   //resultFunction -> returns the result of a function execution
@@ -117,10 +114,6 @@ contract EtherlessSmart {
 
   function getBalance() public view returns (uint256){
     return balance;
- }
-
- function getData() public view returns(string memory){
-   return data;
  }
 
   //sendAmount -> sends the given amount to a certain address
