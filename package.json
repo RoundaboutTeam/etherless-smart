@@ -1,0 +1,33 @@
+{
+  "name": "etherless-smart",
+  "version": "1.0.0",
+  "description": "Module that handles etherless-cli &lt;->​ etherless-server communication (and payment of this work)",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rounadbout/etherless-smart.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rounadbout/etherless-smart/issues"
+  },
+  "homepage": "https://github.com/Rounadbout/etherless-smart#readme",
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^1.0.34",
+    "dotenv": "^8.2.0",
+    "ethers": "^4.0.47",
+    "ganache": "^6.4.4",
+    "ganache-cli": "^6.9.1",
+    "solc": "^0.6.7",
+    "truffle": "^5.1.24",
+    "truffle-hdwallet-provider": "^1.0.17"
+  }
+}
