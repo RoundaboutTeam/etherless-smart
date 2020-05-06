@@ -4,11 +4,11 @@ Smart contract component of Etherless, a module that handles etherless-cli / eth
 **This module is made to work in conjunction with the other components of Etherless**
 
 ## Requirements
-In order to make this module work, you need to have theese installed:
+In order to make this module work, you need to have these installed:
 - [Nodejs LTS](https://nodejs.org/it/download/)
 - Truffle <code>npm install -g truffle</code>
 - Ganache-cli <code>npm install -g ganache-cli</code>
 
 ## Installation 
 - Download this repo 
-- From inside of the downloaded repo run the command <code>npm install</code> to install all the missing dependecies
+- From inside of the downloaded repo run the command <code>npm install</code> to install all the missing dependencies
