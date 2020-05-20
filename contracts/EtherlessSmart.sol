@@ -1,6 +1,6 @@
 pragma solidity >=0.4.22 <0.7.0;
 
-import './EtherlessStorage.sol';
+import "./EtherlessStorage.sol";
 import '@openzeppelin/upgrades/contracts/Initializable.sol';
 
 contract EtherlessSmart is Initializable {
@@ -36,7 +36,7 @@ contract EtherlessSmart is Initializable {
     address payable funcDev = functions.availableFunctions[funcName].developer;
 
     require(msg.value >= funcPrice, "Insufficient amount sent! :'(");
-    balance += msg.value;
+    contractBalance += msg.value;
 
     sendAmount(funcDev, funcPrice);
 
@@ -50,12 +50,12 @@ contract EtherlessSmart is Initializable {
   }
 
   function getBalance() public view returns (uint256){
-    return balance;
+    return contractBalance;
  }
 
   //sendAmount -> sends the given amount to a certain address
  function sendAmount(address payable to, uint256 amount) public {
-   balance -= amount; //remainder from payment
+   contractBalance -= amount; //remainder from payment
    to.transfer(amount);
  }
 
