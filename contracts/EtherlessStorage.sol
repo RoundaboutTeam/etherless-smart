@@ -10,7 +10,7 @@ struct jsFunction {
     bool exists;
   }
 
-  mapping (string => jsFunction) private availableFunctions; //check if struct in mapping is set to 0 by default
+  mapping (string => jsFunction) public availableFunctions; //check if struct in mapping is set to 0 by default
   string[] functionNames;
 
   //FUNCTIONS THAT IMPLEMENT OPERATIONS ON THE AVAILABLEFUNCTIONS LIST
@@ -46,6 +46,12 @@ function addFunction(string memory name, uint256 price) public {
     function getFuncPrice(string memory _funcName) public view returns(uint256){
         uint256 _price = availableFunctions[_funcName].price;
         return _price;
+    }
+
+    //returns the function price
+    function getFuncDev(string memory _funcName) public view returns(address payable){
+        address payable _dev = availableFunctions[_funcName].developer;
+        return _dev;
     }
 
     //returns the list of functions in this format (all in one line) :
