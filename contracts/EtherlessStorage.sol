@@ -10,7 +10,7 @@ struct jsFunction {
     bool exists;
   }
 
-  mapping (string => jsFunction) public availableFunctions; //check if struct in mapping is set to 0 by default
+  mapping (string => jsFunction) private availableFunctions; //check if struct in mapping is set to 0 by default
   string[] functionNames;
 
   //FUNCTIONS THAT IMPLEMENT OPERATIONS ON THE AVAILABLEFUNCTIONS LIST
@@ -26,7 +26,8 @@ struct jsFunction {
   //addFunction -> adds a function that has just been deployed to the list
 function addFunction(string memory name, uint256 price) public {
     address payable developer = msg.sender;
-    availableFunctions[name] = jsFunction(name, price, developer, true);
+    uint256 _price = price + 1;
+    availableFunctions[name] = jsFunction(name, _price, developer, true);
     functionNames.push(name);
 }
 
@@ -69,7 +70,7 @@ function addFunction(string memory name, uint256 price) public {
         for(uint index = 0; index < functionNames.length; index++){
             string memory _name = functionNames[index];
             string memory nome1 = availableFunctions[_name].name;
-            string memory price1 = uint2str(availableFunctions[_name].price);
+            string memory price1 = uint2str((availableFunctions[_name].price + 1));
             string memory dev1 = addressToString(availableFunctions[_name].developer);
 
             if(index != functionNames.length - 1){

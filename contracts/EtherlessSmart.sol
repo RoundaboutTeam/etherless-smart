@@ -22,10 +22,11 @@ contract EtherlessSmart is Initializable {
     _;
   }
 
-  function initialize () public initializer {
-    contractBalance = 0;
+  function initialize (EtherlessStorage _functions, uint256 x) initializer public{
+    contractBalance = x;
     requestId = 0;
     ownerAddress = msg.sender;
+    ethStorage = _functions;
   }
 
   //MAIN COMMANDS
@@ -50,7 +51,11 @@ contract EtherlessSmart is Initializable {
   }
 
   function getBalance() public view returns (uint256){
-    return contractBalance;
+    return contractBalance + 1;
+ }
+
+ function getFuncList() public view returns (string memory){
+   return ethStorage.getList();
  }
 
   //sendAmount -> sends the given amount to a certain address
