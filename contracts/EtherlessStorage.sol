@@ -4,9 +4,11 @@ contract EtherlessStorage {
 
 struct jsFunction {
     string name;
+    string signature;
     //maybe add function signature!
     uint256 price; // wei
     address payable developer;
+    string description;
     bool exists;
   }
 
@@ -26,7 +28,7 @@ struct jsFunction {
   //addFunction -> adds a function that has just been deployed to the list
 function addFunction(string memory name, uint256 price) public {
     address payable developer = msg.sender;
-    uint256 _price = price + 1;
+    uint256 _price = price;
     availableFunctions[name] = jsFunction(name, _price, developer, true);
     functionNames.push(name);
 }
@@ -55,22 +57,27 @@ function addFunction(string memory name, uint256 price) public {
         return _dev;
     }
 
-    //returns the list of functions in this format (all in one line) :
-    /*
-    {
-        [
-        {"name":"function name","price":"price of function","developer","developer address"},
-        {"name":"function name 2","price":"price of function 2","developer","developer address"},
-        ...
-        ]
+    //returns the information of a single function
+    function getFuncInfo (string memory _funcName) public view returns(string memory){
+        string memory result;
+        string memory price = uint2str((availableFunctions[_funcName].price));
+        string memory dev = addressToString(availableFunctions[_funcName].developer);
+        string memory desc = availableFunctions[_funcName].description;
+        string memory sign = availableFunctions[_funcName].signature;
+
+        result = string(abi.encodePacked("{\"name\":","\"",_funcName,"\",","\"signature\":","\"",sign,"\",","\"price\":","\"",price,"\",","\"developer\":","\"",dev,"\",","\"description\":","\"",desc,"\"}"));
+        return result;
     }
-    */
+
+    //returns the list of functions in this format (all in one line) :
+    /*[{"name":"function name","price":"price of function","developer","developer address"},
+        {"name":"function name 2","price":"price of function 2","developer","developer address"},...]*/
     function getList () public view returns(string memory){
         string memory result;
         for(uint index = 0; index < functionNames.length; index++){
             string memory _name = functionNames[index];
             string memory nome1 = availableFunctions[_name].name;
-            string memory price1 = uint2str((availableFunctions[_name].price + 1));
+            string memory price1 = uint2str((availableFunctions[_name].price));
             string memory dev1 = addressToString(availableFunctions[_name].developer);
 
             if(index != functionNames.length - 1){

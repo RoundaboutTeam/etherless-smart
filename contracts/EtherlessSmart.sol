@@ -51,7 +51,7 @@ contract EtherlessSmart is Initializable {
   }
 
   function getBalance() public view returns (uint256){
-    return contractBalance + 1;
+    return contractBalance;
  }
 
  function getFuncList() public view returns (string memory){

@@ -1,11 +1,11 @@
 {
   "contracts": {
     "EtherlessSmart": {
-      "address": "0xEAa80EDb566A453912C2230c4b917134B3dabb20",
-      "constructorCode": "608060405234801561001057600080fd5b50610ec6806100206000396000f3fe",
-      "bodyBytecodeHash": "243932ddb97bc65204d333a7c1dc557232799a791d072998028b42f8bd605bf6",
-      "localBytecodeHash": "919e72e3668f8db390a4734a0442e786413a43cd462cb2faf375621116fec07b",
-      "deployedBytecodeHash": "919e72e3668f8db390a4734a0442e786413a43cd462cb2faf375621116fec07b",
+      "address": "0x0A70E87Ce17e831cb20b060D3A1d7f41f1b3357d",
+      "constructorCode": "608060405234801561001057600080fd5b50610ec3806100206000396000f3fe",
+      "bodyBytecodeHash": "39cde26f0d4692195582f8cc535a5a2f853e283d3fca4a0e57232001609be84c",
+      "localBytecodeHash": "420315a0e21982bab6f2afa4dffef842dbe41a5cb2bceb93d7f163dc14863afe",
+      "deployedBytecodeHash": "420315a0e21982bab6f2afa4dffef842dbe41a5cb2bceb93d7f163dc14863afe",
       "types": {
         "t_bool": {
           "id": "t_bool",
@@ -35,7 +35,7 @@
           "contract": "Initializable",
           "path": "@openzeppelin\\upgrades\\contracts\\Initializable.sol",
           "label": "initialized",
-          "astId": 746,
+          "astId": 747,
           "type": "t_bool",
           "src": "757:24:3"
         },
@@ -43,7 +43,7 @@
           "contract": "Initializable",
           "path": "@openzeppelin\\upgrades\\contracts\\Initializable.sol",
           "label": "initializing",
-          "astId": 748,
+          "astId": 749,
           "type": "t_bool",
           "src": "876:25:3"
         },
@@ -51,7 +51,7 @@
           "contract": "Initializable",
           "path": "@openzeppelin\\upgrades\\contracts\\Initializable.sol",
           "label": "______gap",
-          "astId": 810,
+          "astId": 811,
           "type": "t_array:50<t_uint256>",
           "src": "1982:29:3"
         },
@@ -221,7 +221,7 @@
       {
         "address": "0x0ab0f9240b71184E5788c1EE241a3992fB0fa439",
         "version": "1.0.0",
-        "implementation": "0xEAa80EDb566A453912C2230c4b917134B3dabb20",
+        "implementation": "0x0A70E87Ce17e831cb20b060D3A1d7f41f1b3357d",
         "admin": "0x0233BfE5FCFa08c71f9268eFdd941F416DaE0428",
         "kind": "Upgradeable"
       },
@@ -229,6 +229,13 @@
         "address": "0xe191d9648B8E7C83f9D2EcD95afAa0d55EA8faC8",
         "version": "1.0.0",
         "implementation": "0xEAa80EDb566A453912C2230c4b917134B3dabb20",
+        "admin": "0x0233BfE5FCFa08c71f9268eFdd941F416DaE0428",
+        "kind": "Upgradeable"
+      },
+      {
+        "address": "0xb85301897E1109faCAC91383fC579E690d028203",
+        "version": "1.0.0",
+        "implementation": "0x0A70E87Ce17e831cb20b060D3A1d7f41f1b3357d",
         "admin": "0x0233BfE5FCFa08c71f9268eFdd941F416DaE0428",
         "kind": "Upgradeable"
       }
