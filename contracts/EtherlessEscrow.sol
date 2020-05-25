@@ -1,6 +1,6 @@
 pragma solidity >=0.4.22 <0.7.0;
 
-import "@openzeppelin/contracts/ownership/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 
 contract EtherlessEscrow is Ownable {
@@ -28,11 +28,11 @@ contract EtherlessEscrow is Ownable {
 
     //TODO: maybe return an address??
     function depositsOf(uint256 index) public view returns (uint256) {
-        return _deposits[index];
+        return _deposits[index]._amount;
     }
 
     // Stores the given amount with the payee address
-    function deposit(address sender, address beneficiary, uint256 amount, uint256 index) public virtual payable onlyOwner {
+    function deposit(address payable sender, address payable beneficiary, uint256 amount, uint256 index) public virtual payable onlyOwner {
         _deposits[index] = depositInfo(sender, beneficiary, amount);
 
         //emit Deposited(payee, amount);
@@ -42,7 +42,7 @@ contract EtherlessEscrow is Ownable {
     function withdraw(address payable payee, uint256 index) public virtual onlyOwner {
         uint256 payment = _deposits[index]._amount;
 
-        _deposits[index] = 0;
+        delete _deposits[index];
 
         payee.sendValue(payment);
 
