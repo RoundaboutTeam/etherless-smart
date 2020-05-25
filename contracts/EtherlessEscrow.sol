@@ -3,7 +3,7 @@ pragma solidity >=0.4.22 <0.7.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 
-contract EtherlessEscrow is Ownable {
+contract EtherlessEscrow /*is Ownable */{
     using Address for address payable;
 
     //do we really need events though?
@@ -32,14 +32,14 @@ contract EtherlessEscrow is Ownable {
     }
 
     // Stores the given amount with the payee address
-    function deposit(address payable sender, address payable beneficiary, uint256 amount, uint256 index) public virtual payable onlyOwner {
+    function deposit(address payable sender, address payable beneficiary, uint256 amount, uint256 index) public virtual payable /*onlyOwner*/ {
         _deposits[index] = depositInfo(sender, beneficiary, amount);
 
         //emit Deposited(payee, amount);
     }
 
     //Sends the given amount to the payee adress
-    function withdraw(address payable payee, uint256 index) public virtual onlyOwner {
+    function withdraw(address payable payee, uint256 index) public virtual /*onlyOwner*/ {
         uint256 payment = _deposits[index]._amount;
 
         delete _deposits[index];
