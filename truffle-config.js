@@ -52,9 +52,10 @@ module.exports = {
      },
     ropsten: {
       provider: function () {
-        return new HDWalletProvider(mnemonic, "https://ropsten.infura.io/v3/8a157000ad9148529a02513177b904bd");
+        return new HDWalletProvider(mnemonic, "https://ropsten.infura.io/v3/6877297dbea14c3787c7a830a49fcb3c");
       },
       network_id: '3',
+      gasPrice: 20000000000
     },
     // Another network with more advanced options...
     // advanced: {
@@ -93,7 +94,7 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      // version: "0.5.1",    // Fetch exact version from solc-bin (default: truffle's version)
+      version: "0.6.6",    // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       // settings: {          // See the solidity docs for advice about optimization and evmVersion
       //  optimizer: {
