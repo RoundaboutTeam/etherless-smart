@@ -41,11 +41,9 @@ contract EtherlessSmart is Initializable {
 
     require(msg.value >= funcPrice, "Insufficient amount sent! :'(");
     //contractBalance += msg.value;
-
     getNewId();
-
     escrow.deposit(msg.sender, funcDev, funcPrice, requestId);
-    emit runRequest(funcName, param, requestId, msg.sender);
+    emit runRequest(funcName, param, requestId);
   }
 
   //resultFunction -> returns the result of a function execution
