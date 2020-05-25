@@ -1,7 +1,8 @@
 pragma solidity >=0.4.22 <0.7.0;
 
 import "./EtherlessStorage.sol";
-import '@openzeppelin/upgrades/contracts/Initializable.sol';
+import "./EtherlessEscrow.sol";
+import "@openzeppelin/upgrades/contracts/Initializable.sol";
 
 contract EtherlessSmart is Initializable {
 
@@ -10,6 +11,7 @@ contract EtherlessSmart is Initializable {
   uint256 requestId;
 
   EtherlessStorage private ethStorage;
+  EtherlessEscrow private escrow;
 
   //events
   //event run
@@ -27,6 +29,7 @@ contract EtherlessSmart is Initializable {
     requestId = 0;
     ownerAddress = msg.sender;
     ethStorage = _functions;
+    escrow = new EtherlessEscrow();
   }
 
   //MAIN COMMANDS
@@ -37,16 +40,23 @@ contract EtherlessSmart is Initializable {
     address payable funcDev = ethStorage.getFuncDev(funcName);
 
     require(msg.value >= funcPrice, "Insufficient amount sent! :'(");
-    contractBalance += msg.value;
-
-    sendAmount(funcDev, funcPrice);
+    //contractBalance += msg.value;
 
     getNewId();
-    emit runRequest(funcName, param, requestId);
+
+    escrow.deposit(msg.sender, funcDev, funcPrice, requestId);
+    emit runRequest(funcName, param, requestId, msg.sender);
   }
 
   //resultFunction -> returns the result of a function execution
-  function resultFunction(string memory result, uint256 id) public onlyOwner(msg.sender){
+  function resultFunction(string memory result, uint256 id) public onlyOwner{
+    escrow.withdraw(escrow.getBeneficiary(id), id);
+    emit response(result, id);
+  }
+ 
+  //errorFunction -> returns the result of a function execution
+  function errorFunction(string memory result, uint256 id) public onlyOwner{
+    escrow.withdraw(escrow.getSender(id), id);
     emit response(result, id);
   }
 
@@ -68,5 +78,4 @@ contract EtherlessSmart is Initializable {
  function getNewId() private returns (uint256){
    return requestId++;
  }
-
 }
