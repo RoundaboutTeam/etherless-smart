@@ -24,15 +24,22 @@ contract EtherlessSmart is Initializable {
     _;
   }
 
-  function initialize (EtherlessStorage _functions, uint256 x) initializer public{
-    contractBalance = x;
+  //TODO: check for removal of contractBalance
+  function initialize (EtherlessStorage _functions) initializer public{
+    contractBalance = 0;
     requestId = 0;
     ownerAddress = msg.sender;
     ethStorage = _functions;
     escrow = new EtherlessEscrow();
   }
 
-  //MAIN COMMANDS
+  //TODO: finish function deploy
+  //adds a function to the list
+  function addFunction(string memory name, string memory signature, uint256 price, string memory description) public payable {
+    require(ethStorage.existsFunction(name) == false, "A function with the same name already exist!");
+    ethStorage.insertNewFunction(name, signature, price, description);
+  }
+
   //runFunction -> requests execution of the function
   function runFunction(string memory funcName, string memory param) public payable {
     require(ethStorage.existsFunction(funcName), "The function you're looking for does not exist! :'(");
@@ -47,33 +54,32 @@ contract EtherlessSmart is Initializable {
   }
 
   //resultFunction -> returns the result of a function execution
-  function resultFunction(string memory result, uint256 id) public onlyOwner{
+  function resultFunction(string memory result, uint256 id) public onlyOwner(ownerAddress){
     escrow.withdraw(escrow.getBeneficiary(id), id);
     emit response(result, id);
   }
- 
-  //errorFunction -> returns the result of a function execution
-  function errorFunction(string memory result, uint256 id) public onlyOwner{
+
+  //errorFunction -> returns the failure message of a function execution
+  function errorFunction(string memory result, uint256 id) public onlyOwner(ownerAddress){
     escrow.withdraw(escrow.getSender(id), id);
     emit response(result, id);
   }
 
-  function getBalance() public view returns (uint256){
-    return contractBalance;
- }
+  function getCost(string memory _funcName) public view returns (uint256){
+    return ethStorage.getFuncPrice(_funcName);
+  }
 
- function getFuncList() public view returns (string memory){
-   return ethStorage.getList();
- }
+  function getInfo(string memory _funcName) public view returns (string memory){
+    require(ethStorage.existsFunction(_funcName), "The function you're looking for does not exist! :'(");
+    return ethStorage.getFuncInfo(_funcName);
+  }
 
-  //sendAmount -> sends the given amount to a certain address
- function sendAmount(address payable to, uint256 amount) public {
-   contractBalance -= amount; //remainder from payment
-   to.transfer(amount);
- }
+  function getFuncList() public view returns (string memory){
+    return ethStorage.getList();
+  }
 
   //getNewId -> increments requestId
- function getNewId() private returns (uint256){
-   return requestId++;
- }
+  function getNewId() private returns (uint256){
+    return requestId++;
+  }
 }
