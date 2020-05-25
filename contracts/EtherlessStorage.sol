@@ -26,10 +26,10 @@ struct jsFunction {
   }
 
   //addFunction -> adds a function that has just been deployed to the list
-function addFunction(string memory name, uint256 price) public {
+function addFunction(string memory name, string memory signature, uint256 price, string memory description) public {
     address payable developer = msg.sender;
     uint256 _price = price;
-    availableFunctions[name] = jsFunction(name, _price, developer, true);
+    availableFunctions[name] = jsFunction(name, signature, _price, developer, description, true);
     functionNames.push(name);
 }
 
@@ -51,24 +51,6 @@ function addFunction(string memory name, uint256 price) public {
         return _price;
     }
 
-    //returns the function price
-    function getFuncDev(string memory _funcName) public view returns(address payable){
-        address payable _dev = availableFunctions[_funcName].developer;
-        return _dev;
-    }
-
-    //returns the information of a single function
-    function getFuncInfo (string memory _funcName) public view returns(string memory){
-        string memory result;
-        string memory price = uint2str((availableFunctions[_funcName].price));
-        string memory dev = addressToString(availableFunctions[_funcName].developer);
-        string memory desc = availableFunctions[_funcName].description;
-        string memory sign = availableFunctions[_funcName].signature;
-
-        result = string(abi.encodePacked("{\"name\":","\"",_funcName,"\",","\"signature\":","\"",sign,"\",","\"price\":","\"",price,"\",","\"developer\":","\"",dev,"\",","\"description\":","\"",desc,"\"}"));
-        return result;
-    }
-
     //returns the list of functions in this format (all in one line) :
     /*[{"name":"function name","price":"price of function","developer","developer address"},
         {"name":"function name 2","price":"price of function 2","developer","developer address"},...]*/
@@ -76,27 +58,29 @@ function addFunction(string memory name, uint256 price) public {
         string memory result;
         for(uint index = 0; index < functionNames.length; index++){
             string memory _name = functionNames[index];
-            string memory nome1 = availableFunctions[_name].name;
-            string memory price1 = uint2str((availableFunctions[_name].price));
-            string memory dev1 = addressToString(availableFunctions[_name].developer);
-
-            if(index != functionNames.length - 1){
-                result = string(abi.encodePacked(result, concat(nome1, price1, dev1), ","));
-            }else{
-                result = string(abi.encodePacked(result, concat(nome1, price1, dev1)));
-            }
+            result = string(abi.encodePacked(result, singleFuncJson(_name, false)));
+            if(index != functionNames.length - 1){result = string(abi.encodePacked(result, ","));}
         }
-        result = string(abi.encodePacked("{[",result,"]}"));
-        return result;
+        return string(abi.encodePacked("{\"functionArray\":[",result,"]}"));
     }
 
+    //returns the information of a single function
+    function getFuncInfo (string memory _funcName) public view returns(string memory){
+        return singleFuncJson(_funcName, true);
+    }
 
-    //funzioni "interne" allo smart contract
-    function concat(string memory s1, string memory s2, string memory s3) private pure returns (string memory) {
-        string memory _s1 = string(abi.encodePacked("\"name\"",":","\"",s1,"\""));
-        string memory _s2 = string(abi.encodePacked("\"price\"",":","\"",s2,"\""));
-        string memory _s3 = string(abi.encodePacked("\"developer\"",":","\"",s3,"\""));
-        string memory result = string(abi.encodePacked("{",_s1,",",_s2,",",_s3,"}"));
+    //formats the information of a single object
+    function singleFuncJson (string memory _funcName, bool info) public view returns(string memory){
+        string memory result;
+        string memory price = uint2str((availableFunctions[_funcName].price));
+        string memory dev = addressToString(availableFunctions[_funcName].developer);
+        result = string(abi.encodePacked("{\"name\":","\"",_funcName,"\",","\"price\":","\"",price,"\",","\"developer\":","\"",dev,"\""));
+        if(info){
+            string memory desc = availableFunctions[_funcName].description;
+            string memory sign = availableFunctions[_funcName].signature;
+            result = string(abi.encodePacked(result,",","\"signature\":","\"",sign,"\",","\"description\":","\"",desc,"\""));
+        }
+        result = string(abi.encodePacked(result,"}"));
         return result;
     }
 
