@@ -27,7 +27,7 @@
     "ganache": "^6.4.4",
     "ganache-cli": "^6.9.1",
     "minimist": "^1.2.5",
-    "solc": "^0.6.7",
+    "solc": "^0.6.8",
     "truffle": "^5.1.24",
     "truffle-hdwallet-provider": "^1.0.17"
   },
