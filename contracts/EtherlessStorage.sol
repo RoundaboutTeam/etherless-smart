@@ -26,7 +26,7 @@ struct jsFunction {
   }
 
   //addFunction -> adds a function that has just been deployed to the list
-function addFunction(string memory name, string memory signature, uint256 price, string memory description) public {
+function insertNewFunction(string memory name, string memory signature, uint256 price, string memory description) public {
     address payable developer = msg.sender;
     uint256 _price = price;
     availableFunctions[name] = jsFunction(name, signature, _price, developer, description, true);
@@ -49,6 +49,12 @@ function addFunction(string memory name, string memory signature, uint256 price,
     function getFuncPrice(string memory _funcName) public view returns(uint256){
         uint256 _price = availableFunctions[_funcName].price;
         return _price;
+    }
+
+    //returns the function developer
+    function getFuncDev(string memory _funcName) public view returns(address payable){
+        address payable _dev = availableFunctions[_funcName].developer;
+        return _dev;
     }
 
     //returns the list of functions in this format (all in one line) :
