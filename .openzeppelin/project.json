@@ -4,7 +4,9 @@
     "EtherlessSmart": "EtherlessSmart",
     "EtherlessStorage": "EtherlessStorage"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@openzeppelin/contracts-ethereum-package": "^3.0.0"
+  },
   "name": "etherless-smart",
   "version": "1.0.0",
   "compiler": {

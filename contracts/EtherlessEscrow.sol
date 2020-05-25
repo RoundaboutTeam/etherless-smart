@@ -1,7 +1,7 @@
 pragma solidity >=0.4.22 <0.7.0;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Address.sol";
+import '@openzeppelin/contracts-ethereum-package/contracts/access/Ownable.sol';
+import "@openzeppelin/contracts-ethereum-package/contracts/utils/Address.sol";
 
 contract EtherlessEscrow /*is Ownable */{
     using Address for address payable;

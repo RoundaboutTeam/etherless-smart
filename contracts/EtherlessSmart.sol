@@ -2,7 +2,7 @@ pragma solidity >=0.4.22 <0.7.0;
 
 import "./EtherlessStorage.sol";
 import "./EtherlessEscrow.sol";
-import "@openzeppelin/upgrades/contracts/Initializable.sol";
+import "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol";
 
 contract EtherlessSmart is Initializable {
 
