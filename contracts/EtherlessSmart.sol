@@ -37,7 +37,7 @@ contract EtherlessSmart is Initializable {
   //adds a function to the list
   function addFunction(string memory name, string memory signature, uint256 price, string memory description) public payable {
     require(ethStorage.existsFunction(name) == false, "A function with the same name already exist!");
-    ethStorage.insertNewFunction(name, signature, price, description);
+    ethStorage.insertNewFunction(name, signature, price, msg.sender, description);
   }
 
   //runFunction -> requests execution of the function
