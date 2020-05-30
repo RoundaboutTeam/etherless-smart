@@ -78,8 +78,11 @@ contract EtherlessSmart is Initializable {
     return ethStorage.getList();
   }
 
+  //TODO: test if id creation is fixed
   //getNewId -> increments requestId
   function getNewId() private returns (uint256){
-    return requestId++;
+    requestId = requestId+1;
+    return requestId;
+  }
   }
 }
