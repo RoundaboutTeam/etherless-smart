@@ -77,12 +77,12 @@ function insertNewFunction(string memory name, string memory signature, uint256 
     function singleFuncJson (string memory _funcName, bool info) public view returns(string memory){
         string memory result;
         string memory price = uint2str((availableFunctions[_funcName].price));
-        string memory dev = addressToString(availableFunctions[_funcName].developer);
-        result = string(abi.encodePacked("{\"name\":","\"",_funcName,"\",","\"price\":","\"",price,"\",","\"developer\":","\"",dev,"\""));
+        string memory sign = availableFunctions[_funcName].signature;
+        result = string(abi.encodePacked("{\"name\":","\"",_funcName,"\",","\"signature\":","\"",sign,"\",","\"price\":","\"",price,"\""));
         if(info){
             string memory desc = availableFunctions[_funcName].description;
-            string memory sign = availableFunctions[_funcName].signature;
-            result = string(abi.encodePacked(result,",","\"signature\":","\"",sign,"\",","\"description\":","\"",desc,"\""));
+            string memory dev = addressToString(availableFunctions[_funcName].developer);
+            result = string(abi.encodePacked(result,",","\"description\":","\"",desc,"\",","\"developer\":","\"",dev,"\""));
         }
         result = string(abi.encodePacked(result,"}"));
         return result;
