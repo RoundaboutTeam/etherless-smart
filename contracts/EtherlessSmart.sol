@@ -34,13 +34,13 @@ contract EtherlessSmart is Initializable {
   }
 
   //TODO: finish function deploy
-  //adds a function to the list
+  //[DEPLOY] adds a function to the list
   function addFunction(string memory name, string memory signature, uint256 price, string memory description) public payable {
     require(ethStorage.existsFunction(name) == false, "A function with the same name already exist!");
     ethStorage.insertNewFunction(name, signature, price, msg.sender, description);
   }
 
-  //runFunction -> requests execution of the function
+  //[RUN] runFunction -> requests execution of the function
   function runFunction(string memory funcName, string memory param) public payable {
     require(ethStorage.existsFunction(funcName), "The function you're looking for does not exist! :'(");
     uint256 funcPrice = ethStorage.getFuncPrice(funcName);
@@ -54,26 +54,29 @@ contract EtherlessSmart is Initializable {
   }
 
   //resultFunction -> returns the result of a function execution
-  function resultFunction(string memory result, uint256 id) public onlyOwner(ownerAddress){
+  function resultFunction(string memory result, uint256 id) public /*onlyOwner(ownerAddress)*/{
     escrow.withdraw(escrow.getBeneficiary(id), id);
     emit response(result, id);
   }
 
   //errorFunction -> returns the failure message of a function execution
-  function errorFunction(string memory result, uint256 id) public onlyOwner(ownerAddress){
+  function errorFunction(string memory result, uint256 id) public /*onlyOwner(ownerAddress)*/{
     escrow.withdraw(escrow.getSender(id), id);
     emit response(result, id);
   }
 
+  //returns the price of a single function
   function getCost(string memory _funcName) public view returns (uint256){
     return ethStorage.getFuncPrice(_funcName);
   }
 
+  //[INFO] returns the information of a single function
   function getInfo(string memory _funcName) public view returns (string memory){
     require(ethStorage.existsFunction(_funcName), "The function you're looking for does not exist! :'(");
     return ethStorage.getFuncInfo(_funcName);
   }
 
+  //[LIST] returns a list of all the available functions
   function getFuncList() public view returns (string memory){
     return ethStorage.getList();
   }
@@ -83,6 +86,5 @@ contract EtherlessSmart is Initializable {
   function getNewId() private returns (uint256){
     requestId = requestId+1;
     return requestId;
-  }
   }
 }
