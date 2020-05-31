@@ -1,9 +1,10 @@
 pragma solidity >=0.4.22 <0.7.0;
 
 import '@openzeppelin/contracts-ethereum-package/contracts/access/Ownable.sol';
-import "@openzeppelin/contracts-ethereum-package/contracts/utils/Address.sol";
+import '@openzeppelin/contracts-ethereum-package/contracts/utils/Address.sol';
+import '@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol';
 
-contract EtherlessEscrow /*is Ownable */{
+contract EtherlessEscrow /*is Initializable, Ownable */{
     using Address for address payable;
 
     //do we really need events though?
@@ -17,6 +18,10 @@ contract EtherlessEscrow /*is Ownable */{
     }
 
     mapping(uint256 => depositInfo) private _deposits;
+
+    /*constructor (address owner) public{
+        Ownable.initialize(owner);
+    }*/
 
     function getBeneficiary(uint256 index) public view returns (address payable) {
         return _deposits[index]._beneficiary;
