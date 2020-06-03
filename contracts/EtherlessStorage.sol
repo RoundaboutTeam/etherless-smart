@@ -35,7 +35,7 @@ function insertNewFunction(string memory name, string memory signature, uint256 
     function removeFunction(string memory toRemove) public {
         delete availableFunctions[toRemove];
         for (uint index = 0; index < functionNames.length; index++) {
-            if(compareStrings(functionNames[index], toRemove)) {
+            if(compareString(functionNames[index], toRemove)) {
                 //delete functionNames[index]; //check if length is correct after deleting an element
                 functionNames[index] = functionNames[functionNames.length - 1];
                 functionNames.pop();
@@ -113,11 +113,11 @@ function insertNewFunction(string memory name, string memory signature, uint256 
         return string(bstr);
     }
 
-    function compareString(string memory s1, string memory s2) returns (bool){
-        if(bytes(a).length != bytes(b).length) {
+    function compareString(string memory s1, string memory s2) private pure returns (bool) {
+        if(bytes(s1).length != bytes(s2).length) {
             return false;
         } else {
-            return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
+            return (keccak256(abi.encodePacked((s1))) == keccak256(abi.encodePacked((s2))));
         }
     }
 }
