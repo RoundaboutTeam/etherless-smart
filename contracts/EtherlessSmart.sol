@@ -66,14 +66,14 @@ contract EtherlessSmart is Initializable {
   }
 
   //returns the price of a single function
-  function getCost(string memory _funcName) public view returns (uint256){
-    return ethStorage.getFuncPrice(_funcName);
+  function getCost(string memory funcName) public view returns (uint256){
+    return ethStorage.getFuncPrice(funcName);
   }
 
   //[INFO] returns the information of a single function
-  function getInfo(string memory _funcName) public view returns (string memory){
-    require(ethStorage.existsFunction(_funcName), "The function you're looking for does not exist! :'(");
-    return ethStorage.getFuncInfo(_funcName);
+  function getInfo(string memory funcName) public view returns (string memory){
+    require(ethStorage.existsFunction(funcName), "The function you're looking for does not exist! :'(");
+    return ethStorage.getFuncInfo(funcName);
   }
 
   //[LIST] returns a list of all the available functions

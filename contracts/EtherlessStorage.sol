@@ -44,15 +44,15 @@ function insertNewFunction(string memory name, string memory signature, uint256 
     }
 
     //returns the function price
-    function getFuncPrice(string memory _funcName) public view returns(uint256){
-        uint256 _price = availableFunctions[_funcName].price;
+    function getFuncPrice(string memory funcName) public view returns(uint256){
+        uint256 _price = availableFunctions[funcName].price;
         return _price;
     }
 
     //returns the function developer
-    function getFuncDev(string memory _funcName) public view returns(address payable){
-        address payable _dev = availableFunctions[_funcName].developer;
-        return _dev;
+    function getFuncDev(string memory funcName) public view returns(address payable){
+        address payable dev = availableFunctions[funcName].developer;
+        return dev;
     }
 
     //returns the list of functions in this format (all in one line) :
@@ -69,19 +69,19 @@ function insertNewFunction(string memory name, string memory signature, uint256 
     }
 
     //returns the information of a single function
-    function getFuncInfo (string memory _funcName) public view returns(string memory){
-        return singleFuncJson(_funcName, true);
+    function getFuncInfo (string memory funcName) public view returns(string memory){
+        return singleFuncJson(funcName, true);
     }
 
     //formats the information of a single object
-    function singleFuncJson (string memory _funcName, bool info) public view returns(string memory){
+    function singleFuncJson (string memory funcName, bool info) private view returns(string memory){
         string memory result;
-        string memory price = uint2str((availableFunctions[_funcName].price));
-        string memory sign = availableFunctions[_funcName].signature;
-        result = string(abi.encodePacked("{\"name\":","\"",_funcName,"\",","\"signature\":","\"",sign,"\",","\"price\":","\"",price,"\""));
+        string memory price = uint2str((availableFunctions[funcName].price));
+        string memory sign = availableFunctions[funcName].signature;
+        result = string(abi.encodePacked("{\"name\":","\"",funcName,"\",","\"signature\":","\"",sign,"\",","\"price\":","\"",price,"\""));
         if(info){
-            string memory desc = availableFunctions[_funcName].description;
-            string memory dev = addressToString(availableFunctions[_funcName].developer);
+            string memory desc = availableFunctions[funcName].description;
+            string memory dev = addressToString(availableFunctions[funcName].developer);
             result = string(abi.encodePacked(result,",","\"description\":","\"",desc,"\",","\"developer\":","\"",dev,"\""));
         }
         result = string(abi.encodePacked(result,"}"));
