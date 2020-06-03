@@ -76,7 +76,7 @@ function insertNewFunction(string memory name, string memory signature, uint256 
     //formats the information of a single object
     function singleFuncJson (string memory funcName, bool info) private view returns(string memory){
         string memory result;
-        string memory price = uint2str((availableFunctions[funcName].price));
+        string memory price = uintToString((availableFunctions[funcName].price));
         string memory sign = availableFunctions[funcName].signature;
         result = string(abi.encodePacked("{\"name\":","\"",funcName,"\",","\"signature\":","\"",sign,"\",","\"price\":","\"",price,"\""));
         if(info){
@@ -88,8 +88,8 @@ function insertNewFunction(string memory name, string memory signature, uint256 
         return result;
     }
 
-    function addressToString(address _addr) public pure returns(string memory) {
-        bytes32 value = bytes32(uint256(_addr));
+    function addressToString(address addr) private pure returns(string memory) {
+        bytes32 value = bytes32(uint256(addr));
         bytes memory alphabet = "0123456789abcdef";
         bytes memory str = new bytes(42);
         str[0] = '0';
@@ -101,8 +101,8 @@ function insertNewFunction(string memory name, string memory signature, uint256 
         return string(str);
     }
 
-    function uint2str(uint256 _x) public pure returns (string memory _uintAsString) {
-        uint256 _i = _x;
+    function uintToString(uint256 x) private pure returns (string memory _uintAsString) {
+        uint256 _i = x;
         if (_i == 0) {return "0";}
         uint256 j = _i;
         uint256 len;
