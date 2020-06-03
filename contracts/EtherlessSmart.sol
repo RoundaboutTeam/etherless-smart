@@ -19,16 +19,16 @@ contract EtherlessSmart is Initializable {
   //event response
   event response(string result, uint256 indexed id);
 
-  modifier onlyOwner(address _invokedFrom) {
-    require(_invokedFrom == ownerAddress, "You are not the owner of the contract!");
+  modifier onlyServer(address invokedFrom) {
+    require(invokedFrom == ownerAddress, "You are not the owner of the contract!");
     _;
   }
 
   //TODO: check for removal of contractBalance
-  function initialize (EtherlessStorage _functions) initializer public{
+  function initialize (EtherlessStorage _functions, address serverAddress) initializer public{
     contractBalance = 0;
     requestId = 0;
-    ownerAddress = msg.sender;
+    ownerAddress = serverAddress;
     ethStorage = _functions;
     escrow = new EtherlessEscrow();
   }
@@ -54,13 +54,13 @@ contract EtherlessSmart is Initializable {
   }
 
   //resultFunction -> returns the result of a function execution
-  function resultFunction(string memory result, uint256 id) public /*onlyOwner(ownerAddress)*/{
+  function resultFunction(string memory result, uint256 id) public onlyServer(msg.sender){
     escrow.withdraw(escrow.getBeneficiary(id), id);
     emit response(result, id);
   }
 
   //errorFunction -> returns the failure message of a function execution
-  function errorFunction(string memory result, uint256 id) public /*onlyOwner(ownerAddress)*/{
+  function errorFunction(string memory result, uint256 id) public onlyServer(msg.sender){
     escrow.withdraw(escrow.getSender(id), id);
     emit response(result, id);
   }
@@ -85,6 +85,14 @@ contract EtherlessSmart is Initializable {
   //getNewId -> increments requestId
   function getNewId() private returns (uint256){
     requestId = requestId+1;
+    return requestId;
+  }
+
+  function getDeposit(uint256 id) public view returns (uint256){
+    return escrow.depositsOf(id);
+  }
+
+  function getId() public view returns (uint256){
     return requestId;
   }
 }
