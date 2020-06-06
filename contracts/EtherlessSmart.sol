@@ -20,7 +20,7 @@ contract EtherlessSmart is Initializable {
   event response(string result, uint256 indexed id);
 
   modifier onlyServer(address invokedFrom) {
-    require(invokedFrom == ownerAddress, "You are not the owner of the contract!");
+    require(invokedFrom == ownerAddress, "You are not the designated address!");
     _;
   }
 
