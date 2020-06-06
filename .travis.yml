@@ -1,7 +1,6 @@
-dist: xenial
-    language: node_js
+language: node_js
 node_js:
-    - "lts/dubnium"
+  - 12
 install:
     - npm install
 script:
