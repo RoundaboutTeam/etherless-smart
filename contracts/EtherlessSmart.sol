@@ -25,12 +25,13 @@ contract EtherlessSmart is Initializable {
   }
 
   //TODO: check for removal of contractBalance
-  function initialize (EtherlessStorage _functions, address serverAddress) initializer public{
+  function initialize (EtherlessStorage functions, address serverAddress) initializer public{
     contractBalance = 0;
     requestId = 0;
     ownerAddress = serverAddress;
-    ethStorage = _functions;
+    ethStorage = functions;
     escrow = new EtherlessEscrow();
+    escrow.initialize();
   }
 
   //TODO: finish function deploy

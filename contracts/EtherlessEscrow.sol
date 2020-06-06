@@ -19,9 +19,9 @@ contract EtherlessEscrow is OwnableUpgradeSafe {
 
     mapping(uint256 => depositInfo) private deposits;
 
-    /*constructor (address owner) public{
-        Ownable.initialize(owner);
-    }*/
+    function initialize() public initializer {
+        OwnableUpgradeSafe.__Ownable_init();
+    }
 
     function getBeneficiary(uint256 index) public view returns (address payable) {
         return deposits[index].beneficiary;
