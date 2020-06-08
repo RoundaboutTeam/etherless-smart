@@ -6,39 +6,48 @@ import "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol";
 
 contract EtherlessSmart is Initializable {
 
-  address ownerAddress;
+  address payable ownerAddress;
+  address serverAddress;
   uint256 contractBalance;
   uint256 requestId;
+  uint256 fprice;
 
   EtherlessStorage private ethStorage;
   EtherlessEscrow private escrow;
 
   //events
-  //event run
+  event deployRequest(string funcname, string signature, string funchash, uint256 indexed id);
   event runRequest(string funcname, string param, uint256 indexed id);
-  //event response
-  event response(string result, uint256 indexed id);
+  event resultOk(string result, uint256 indexed id);
+  event resultError(string result, uint256 indexed id);
 
   modifier onlyServer(address invokedFrom) {
-    require(invokedFrom == ownerAddress, "You are not the designated address!");
+    require(invokedFrom == serverAddress, "You are not the designated address!");
     _;
   }
 
   //TODO: check for removal of contractBalance
-  function initialize (EtherlessStorage functions, address serverAddress) initializer public{
+  function initialize (EtherlessStorage functions, address serverAddr, uint256 price) initializer public {
+    ownerAddress = payable(address(this));
+    serverAddress = serverAddr;
     contractBalance = 0;
     requestId = 0;
-    ownerAddress = serverAddress;
+    fprice = price;
     ethStorage = functions;
     escrow = new EtherlessEscrow();
-    escrow.initialize();
   }
 
   //TODO: finish function deploy
   //[DEPLOY] adds a function to the list
-  function addFunction(string memory name, string memory signature, uint256 price, string memory description) public payable {
+  function deployFunction(string memory name, string memory signature, string memory description, string memory funchash) public payable {
     require(ethStorage.existsFunction(name) == false, "A function with the same name already exist!");
-    ethStorage.insertNewFunction(name, signature, price, msg.sender, description);
+    require(msg.value >= fprice, "Insufficient amount sent! :(");
+
+    getNewId();
+    escrow.deposit{value: fprice}(msg.sender, ownerAddress, fprice, requestId);
+    ethStorage.insertNewFunction(name, signature, fprice, msg.sender, description);
+    
+    deployRequest(name, signature, funchash, requestId);
   }
 
   //[RUN] runFunction -> requests execution of the function
@@ -54,16 +63,26 @@ contract EtherlessSmart is Initializable {
     emit runRequest(funcName, param, requestId);
   }
 
-  //resultFunction -> returns the result of a function execution
-  function resultFunction(string memory result, uint256 id) public onlyServer(msg.sender){
-    escrow.withdraw(escrow.getBeneficiary(id), id);
-    emit response(result, id);
+  function deployResult(string memory message, string memory name, uint256 id, bool successful) public onlyServer(msg.sender) {
+    if(successful == true) {
+      escrow.withdraw(escrow.getBeneficiary(id), id);
+      ethStorage.insertInArray(name);
+      emit resultOk(message, id);
+    } else {
+      escrow.withdraw(escrow.getSender(id), id);
+      ethStorage.removeFunction(name);
+      emit resultError(message, id);
+    }
   }
 
-  //errorFunction -> returns the failure message of a function execution
-  function errorFunction(string memory result, uint256 id) public onlyServer(msg.sender){
-    escrow.withdraw(escrow.getSender(id), id);
-    emit response(result, id);
+  function runResult(string memory message, uint256 id, bool successful) public onlyServer(msg.sender) {
+     if(successful == true) {
+      escrow.withdraw(escrow.getBeneficiary(id), id);
+      emit resultOk(message, id);
+    } else {
+      escrow.withdraw(escrow.getSender(id), id);
+      emit resultError(message, id);
+    }
   }
 
   //returns the price of a single function
