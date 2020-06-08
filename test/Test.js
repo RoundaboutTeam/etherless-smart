@@ -24,7 +24,7 @@ let signer = provider.getSigner();
 //tests
 describe('JS Test Smart', function () {
     it('tests initial id', async function () {
-        await smart_contr.initialize(storage_contr.address, signer.getAddress());
+        await smart_contr.initialize(storage_contr.address, signer.getAddress(), 15);
         let id = await smart_contr.getId();
         assert.equal(id, 0, "id is not zero");
     });
