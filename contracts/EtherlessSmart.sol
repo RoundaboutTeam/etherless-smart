@@ -18,6 +18,7 @@ contract EtherlessSmart is Initializable {
   //events
   event deployRequest(string funcname, string signature, string funchash, uint256 indexed id);
   event runRequest(string funcname, string param, uint256 indexed id);
+  event deleteRequest(string funcname, uint256 indexed id);
   event resultOk(string result, uint256 indexed id);
   event resultError(string result, uint256 indexed id);
 
@@ -63,6 +64,15 @@ contract EtherlessSmart is Initializable {
     emit runRequest(funcName, param, requestId);
   }
 
+  function deleteFunction(string memory name) public payable {
+    require(ethStorage.existsFunction(name) == true, "The function you're looking for does not exist! :'(");
+    require(msg.value >= fprice, "Insufficient amount sent! :(");
+
+    getNewId();
+    escrow.deposit{value: fprice}(msg.sender, ownerAddress, fprice, requestId);
+    emit deleteRequest(name, requestId);
+  }
+
   function deployResult(string memory message, string memory name, uint256 id, bool successful) public onlyServer(msg.sender) {
     if(successful == true) {
       escrow.withdraw(escrow.getBeneficiary(id), id);
@@ -78,6 +88,18 @@ contract EtherlessSmart is Initializable {
   function runResult(string memory message, uint256 id, bool successful) public onlyServer(msg.sender) {
      if(successful == true) {
       escrow.withdraw(escrow.getBeneficiary(id), id);
+      emit resultOk(message, id);
+    } else {
+      escrow.withdraw(escrow.getSender(id), id);
+      emit resultError(message, id);
+    }
+  }
+
+  function deleteResult(string memory message, string memory name, uint256 id, bool successful) public onlyServer(msg.sender) {
+    if(successful == true) {
+      escrow.withdraw(escrow.getBeneficiary(id), id);
+      ethStorage.removeFunction(name);
+      ethStorage.removeFromArray(name);
       emit resultOk(message, id);
     } else {
       escrow.withdraw(escrow.getSender(id), id);
