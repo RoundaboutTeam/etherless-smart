@@ -28,20 +28,29 @@ struct jsFunction {
   //addFunction -> adds a function that has just been deployed to the list
 function insertNewFunction(string memory name, string memory signature, uint256 price, address payable dev, string memory description) public {
     availableFunctions[name] = jsFunction(name, signature, price, dev, description, true);
+}
+
+//inserts the corresponding array entry
+function insertInArray(string memory name) public {
     functionNames.push(name);
 }
 
 //removeFunction -> removes a given function from availableFunctions list
     function removeFunction(string memory toRemove) public {
         delete availableFunctions[toRemove];
+    }
+
+//removes the corresponding array entry
+    function removeFromArray(string memory name) public {
         for (uint index = 0; index < functionNames.length; index++) {
-            if(compareString(functionNames[index], toRemove)) {
+            if(compareString(functionNames[index], name)) {
                 //delete functionNames[index]; //check if length is correct after deleting an element
                 functionNames[index] = functionNames[functionNames.length - 1];
                 functionNames.pop();
             }
         }
     }
+
 
     //returns the function price
     function getFuncPrice(string memory funcName) public view returns(uint256){
