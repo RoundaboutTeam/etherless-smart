@@ -121,7 +121,11 @@ contract EtherlessSmart is Initializable {
 
   //[LIST] returns a list of all the available functions
   function getFuncList() public view returns (string memory){
-    return ethStorage.getList();
+    return ethStorage.getList(msg.sender, false);
+  }
+  //[LIST] returns a list of all the available functions
+  function getOwnedList(address payable dev) public view returns (string memory){
+    return ethStorage.getList(dev, true);
   }
 
   //TODO: test if id creation is fixed

@@ -1,11 +1,11 @@
 {
   "contracts": {
     "EtherlessSmart": {
-      "address": "0x6dfc45aEEDF10c1346173Fd65ECf9061C7d8E4ed",
-      "constructorCode": "608060405234801561001057600080fd5b50612ec7806100206000396000f3fe",
-      "bodyBytecodeHash": "a3ac89a1acacbf04d2de52ea3b7f6873a79834bcbea2cc6ec81b0dad1ecb77a8",
-      "localBytecodeHash": "c3e34acc7c0c3d4b50d27a98c96f72944a41aff4eb60d0b4a72536b387ccfd7f",
-      "deployedBytecodeHash": "c3e34acc7c0c3d4b50d27a98c96f72944a41aff4eb60d0b4a72536b387ccfd7f",
+      "address": "0xCC44263b0ADa29cBA84861851Ca3b4ba3dD78C84",
+      "constructorCode": "608060405234801561001057600080fd5b50614ece806100206000396000f3fe",
+      "bodyBytecodeHash": "1aa0a42216fd65bc78eb6f7ebac31e77ab7c4bd240146b82e64c8ee11bbd6f50",
+      "localBytecodeHash": "b9503c2ee66ff261a62c73524ccc85022037608f01a2eb7224d4fbdcdc0e8ccd",
+      "deployedBytecodeHash": "b9503c2ee66ff261a62c73524ccc85022037608f01a2eb7224d4fbdcdc0e8ccd",
       "types": {
         "t_bool": {
           "id": "t_bool",
@@ -24,6 +24,11 @@
           "kind": "array",
           "label": "uint256[50]"
         },
+        "t_address_payable": {
+          "id": "t_address_payable",
+          "kind": "elementary",
+          "label": "address payable"
+        },
         "t_address": {
           "id": "t_address",
           "kind": "elementary",
@@ -35,7 +40,7 @@
           "contract": "Initializable",
           "path": "@openzeppelin\\contracts-ethereum-package\\contracts\\Initializable.sol",
           "label": "initialized",
-          "astId": 1076,
+          "astId": 1409,
           "type": "t_bool",
           "src": "757:24:5"
         },
@@ -43,7 +48,7 @@
           "contract": "Initializable",
           "path": "@openzeppelin\\contracts-ethereum-package\\contracts\\Initializable.sol",
           "label": "initializing",
-          "astId": 1078,
+          "astId": 1411,
           "type": "t_bool",
           "src": "876:25:5"
         },
@@ -51,7 +56,7 @@
           "contract": "Initializable",
           "path": "@openzeppelin\\contracts-ethereum-package\\contracts\\Initializable.sol",
           "label": "______gap",
-          "astId": 1143,
+          "astId": 1476,
           "type": "t_array:50<t_uint256>",
           "src": "1982:29:5"
         },
@@ -59,41 +64,57 @@
           "contract": "EtherlessSmart",
           "path": "..\\..\\..\\..\\..\\C\\Users\\verof\\Documents\\GitHub\\etherless-smart\\contracts\\EtherlessSmart.sol",
           "label": "ownerAddress",
-          "astId": 121,
+          "astId": 132,
+          "type": "t_address_payable",
+          "src": "233:28:1"
+        },
+        {
+          "contract": "EtherlessSmart",
+          "path": "..\\..\\..\\..\\..\\C\\Users\\verof\\Documents\\GitHub\\etherless-smart\\contracts\\EtherlessSmart.sol",
+          "label": "serverAddress",
+          "astId": 134,
           "type": "t_address",
-          "src": "233:20:1"
+          "src": "266:21:1"
         },
         {
           "contract": "EtherlessSmart",
           "path": "..\\..\\..\\..\\..\\C\\Users\\verof\\Documents\\GitHub\\etherless-smart\\contracts\\EtherlessSmart.sol",
           "label": "contractBalance",
-          "astId": 123,
+          "astId": 136,
           "type": "t_uint256",
-          "src": "258:23:1"
+          "src": "292:23:1"
         },
         {
           "contract": "EtherlessSmart",
           "path": "..\\..\\..\\..\\..\\C\\Users\\verof\\Documents\\GitHub\\etherless-smart\\contracts\\EtherlessSmart.sol",
           "label": "requestId",
-          "astId": 125,
+          "astId": 138,
           "type": "t_uint256",
-          "src": "286:17:1"
+          "src": "320:17:1"
+        },
+        {
+          "contract": "EtherlessSmart",
+          "path": "..\\..\\..\\..\\..\\C\\Users\\verof\\Documents\\GitHub\\etherless-smart\\contracts\\EtherlessSmart.sol",
+          "label": "fprice",
+          "astId": 140,
+          "type": "t_uint256",
+          "src": "342:14:1"
         },
         {
           "contract": "EtherlessSmart",
           "path": "..\\..\\..\\..\\..\\C\\Users\\verof\\Documents\\GitHub\\etherless-smart\\contracts\\EtherlessSmart.sol",
           "label": "ethStorage",
-          "astId": 127,
+          "astId": 142,
           "type": "t_address",
-          "src": "310:35:1"
+          "src": "363:35:1"
         },
         {
           "contract": "EtherlessSmart",
           "path": "..\\..\\..\\..\\..\\C\\Users\\verof\\Documents\\GitHub\\etherless-smart\\contracts\\EtherlessSmart.sol",
           "label": "escrow",
-          "astId": 129,
+          "astId": 144,
           "type": "t_address",
-          "src": "350:30:1"
+          "src": "403:30:1"
         }
       ],
       "warnings": {
@@ -107,11 +128,11 @@
       }
     },
     "EtherlessStorage": {
-      "address": "0x465CB64Fc44Dc48Daef42BaEA9b05A20A59559FD",
-      "constructorCode": "608060405234801561001057600080fd5b50611f6b806100206000396000f3fe",
-      "bodyBytecodeHash": "f366b642f7a4f83c958869ceda0cf7afea23f33580c6950bf115a46e8b2e08a7",
-      "localBytecodeHash": "86090eb4c4bf311214ed93fcbe8ef3d8f19926b6190f258aa2259898f779a90f",
-      "deployedBytecodeHash": "86090eb4c4bf311214ed93fcbe8ef3d8f19926b6190f258aa2259898f779a90f",
+      "address": "0x8Bb8beC8DeA7B2344B7e3104A860478b1290e087",
+      "constructorCode": "608060405234801561001057600080fd5b506122fd806100206000396000f3fe",
+      "bodyBytecodeHash": "1428149c5a268ae1062fd444f76f0833cce5bd3b96b9be907d9b1a00c59669a9",
+      "localBytecodeHash": "8fa8eeebc6cb901fe82df9357050a4feb3e63c43d0fc0f4233273516d8cb1260",
+      "deployedBytecodeHash": "8fa8eeebc6cb901fe82df9357050a4feb3e63c43d0fc0f4233273516d8cb1260",
       "types": {
         "t_struct<EtherlessStorage.jsFunction>": {
           "id": "t_struct<EtherlessStorage.jsFunction>",
@@ -120,37 +141,37 @@
           "members": [
             {
               "label": "name",
-              "astId": 420,
+              "astId": 691,
               "type": "t_string",
               "src": "92:11:2"
             },
             {
               "label": "signature",
-              "astId": 422,
+              "astId": 693,
               "type": "t_string",
               "src": "110:16:2"
             },
             {
               "label": "price",
-              "astId": 424,
+              "astId": 695,
               "type": "t_uint256",
               "src": "170:13:2"
             },
             {
               "label": "developer",
-              "astId": 426,
+              "astId": 697,
               "type": "t_address_payable",
               "src": "197:25:2"
             },
             {
               "label": "description",
-              "astId": 428,
+              "astId": 699,
               "type": "t_string",
               "src": "229:18:2"
             },
             {
               "label": "exists",
-              "astId": 430,
+              "astId": 701,
               "type": "t_bool",
               "src": "254:11:2"
             }
@@ -195,7 +216,7 @@
           "contract": "EtherlessStorage",
           "path": "..\\..\\..\\..\\..\\C\\Users\\verof\\Documents\\GitHub\\etherless-smart\\contracts\\EtherlessStorage.sol",
           "label": "availableFunctions",
-          "astId": 435,
+          "astId": 706,
           "type": "t_mapping<t_struct<EtherlessStorage.jsFunction>>",
           "src": "277:57:2"
         },
@@ -203,7 +224,7 @@
           "contract": "EtherlessStorage",
           "path": "..\\..\\..\\..\\..\\C\\Users\\verof\\Documents\\GitHub\\etherless-smart\\contracts\\EtherlessStorage.sol",
           "label": "functionNames",
-          "astId": 438,
+          "astId": 709,
           "type": "t_array:dyn<t_string>",
           "src": "391:22:2"
         }
@@ -219,7 +240,7 @@
             "contract": "EtherlessStorage",
             "path": "..\\..\\..\\..\\..\\C\\Users\\verof\\Documents\\GitHub\\etherless-smart\\contracts\\EtherlessStorage.sol",
             "label": "availableFunctions",
-            "astId": 435,
+            "astId": 706,
             "type": "t_mapping<t_struct<EtherlessStorage.jsFunction>>",
             "src": "277:57:2"
           }
@@ -230,119 +251,21 @@
   },
   "solidityLibs": {},
   "proxies": {
-    "etherless-smart/EtherlessSmart": [
+    "etherless-smart/EtherlessStorage": [
       {
-        "address": "0xDA846aCfB795a712b939f8E2660Ad34723F436A7",
+        "address": "0xbc00B7F796053a373680Dd750e2FBb272006C324",
         "version": "1.0.0",
-        "implementation": "0xEAa80EDb566A453912C2230c4b917134B3dabb20",
-        "admin": "0x0233BfE5FCFa08c71f9268eFdd941F416DaE0428",
-        "kind": "Upgradeable"
-      },
-      {
-        "address": "0x0ab0f9240b71184E5788c1EE241a3992fB0fa439",
-        "version": "1.0.0",
-        "implementation": "0x0A70E87Ce17e831cb20b060D3A1d7f41f1b3357d",
-        "admin": "0x0233BfE5FCFa08c71f9268eFdd941F416DaE0428",
-        "kind": "Upgradeable"
-      },
-      {
-        "address": "0xe191d9648B8E7C83f9D2EcD95afAa0d55EA8faC8",
-        "version": "1.0.0",
-        "implementation": "0xEAa80EDb566A453912C2230c4b917134B3dabb20",
-        "admin": "0x0233BfE5FCFa08c71f9268eFdd941F416DaE0428",
-        "kind": "Upgradeable"
-      },
-      {
-        "address": "0xb85301897E1109faCAC91383fC579E690d028203",
-        "version": "1.0.0",
-        "implementation": "0x0A70E87Ce17e831cb20b060D3A1d7f41f1b3357d",
-        "admin": "0x0233BfE5FCFa08c71f9268eFdd941F416DaE0428",
-        "kind": "Upgradeable"
-      },
-      {
-        "address": "0xbB3196457153F67421A89D3F0591A2473FcaB9C6",
-        "version": "1.0.0",
-        "implementation": "0x2A81E3272c4664EfDE40c6BeD97809DBaB553616",
-        "admin": "0x0233BfE5FCFa08c71f9268eFdd941F416DaE0428",
-        "kind": "Upgradeable"
-      },
-      {
-        "address": "0x5f95F9FC6345C8f6CC94D154e3C6212722660146",
-        "version": "1.0.0",
-        "implementation": "0x62EAB552bfD671Eb70eA66749e339CEc4a49056B",
-        "admin": "0x0233BfE5FCFa08c71f9268eFdd941F416DaE0428",
-        "kind": "Upgradeable"
-      },
-      {
-        "address": "0xcA10Ce997627Ced541f0CEe84e698AD8A8163577",
-        "version": "1.0.0",
-        "implementation": "0x33B61258665D399ADA6f8A021783aab476054842",
-        "admin": "0x0233BfE5FCFa08c71f9268eFdd941F416DaE0428",
-        "kind": "Upgradeable"
-      },
-      {
-        "address": "0xC08d8c740D27540182E4e444b86D9d72adf59ed1",
-        "version": "1.0.0",
-        "implementation": "0xac28c15E4787814DE894a1720C69039489Ab36c8",
-        "admin": "0x0233BfE5FCFa08c71f9268eFdd941F416DaE0428",
-        "kind": "Upgradeable"
-      },
-      {
-        "address": "0xDB6c5B4632eD610566DA96Fbc29761f427D0F720",
-        "version": "1.0.0",
-        "implementation": "0xac28c15E4787814DE894a1720C69039489Ab36c8",
-        "admin": "0x0233BfE5FCFa08c71f9268eFdd941F416DaE0428",
-        "kind": "Upgradeable"
-      },
-      {
-        "address": "0x04c130b37F54bC7e788E4F8955080E7F578eF79d",
-        "version": "1.0.0",
-        "implementation": "0x6DEAb508500c6E828110F70f8A5bC4Dac48fC0D6",
-        "admin": "0x0233BfE5FCFa08c71f9268eFdd941F416DaE0428",
-        "kind": "Upgradeable"
-      },
-      {
-        "address": "0x270E0d9Aa02d7A8bC7785a19b9c607aC7004e1B8",
-        "version": "1.0.0",
-        "implementation": "0x6dfc45aEEDF10c1346173Fd65ECf9061C7d8E4ed",
-        "admin": "0x0233BfE5FCFa08c71f9268eFdd941F416DaE0428",
+        "implementation": "0xfFFdF4a59fb05297354D27d0DE7Bd143a8B452DF",
+        "admin": "0x898b4F4fDd5e36CfbA3bB6af2aA53561B39fEBB5",
         "kind": "Upgradeable"
       }
     ],
-    "etherless-smart/EtherlessStorage": [
+    "etherless-smart/EtherlessSmart": [
       {
-        "address": "0x7dF96830e44caE26a8284668633C0890c052839B",
+        "address": "0x2328353270A536880eC822Ece90a66A363701e12",
         "version": "1.0.0",
-        "implementation": "0x1628462dc8b615518cCc447f164FAe61510b4613",
-        "admin": "0x0233BfE5FCFa08c71f9268eFdd941F416DaE0428",
-        "kind": "Upgradeable"
-      },
-      {
-        "address": "0x6F356cEf1676169e57145fe84359834d470E8A39",
-        "version": "1.0.0",
-        "implementation": "0xdBcEaF97CD256D4B50465a70C7faf7f9224edC19",
-        "admin": "0x0233BfE5FCFa08c71f9268eFdd941F416DaE0428",
-        "kind": "Upgradeable"
-      },
-      {
-        "address": "0x1E202083E87E4e55982Eb94eF7e1e3b79B79d497",
-        "version": "1.0.0",
-        "implementation": "0xdBcEaF97CD256D4B50465a70C7faf7f9224edC19",
-        "admin": "0x0233BfE5FCFa08c71f9268eFdd941F416DaE0428",
-        "kind": "Upgradeable"
-      },
-      {
-        "address": "0x6953f822445A380f8bC56189F1f86E5Da0E01c22",
-        "version": "1.0.0",
-        "implementation": "0x57BD6A96cd4564cfD55e9B8E4AbEA157C99EFe4C",
-        "admin": "0x0233BfE5FCFa08c71f9268eFdd941F416DaE0428",
-        "kind": "Upgradeable"
-      },
-      {
-        "address": "0x98A7E8e6b94De354DEf602ed8dB69Ac621d16695",
-        "version": "1.0.0",
-        "implementation": "0x465CB64Fc44Dc48Daef42BaEA9b05A20A59559FD",
-        "admin": "0x0233BfE5FCFa08c71f9268eFdd941F416DaE0428",
+        "implementation": "0xCC44263b0ADa29cBA84861851Ca3b4ba3dD78C84",
+        "admin": "0x898b4F4fDd5e36CfbA3bB6af2aA53561B39fEBB5",
         "kind": "Upgradeable"
       }
     ]
@@ -350,12 +273,6 @@
   "manifestVersion": "2.2",
   "version": "1.0.0",
   "proxyAdmin": {
-    "address": "0x0233BfE5FCFa08c71f9268eFdd941F416DaE0428"
-  },
-  "dependencies": {
-    "@openzeppelin/contracts-ethereum-package": {
-      "package": "0x2a9e7B63514438906A83a1e320dBBD814D417002",
-      "version": "3.0.0"
-    }
+    "address": "0x898b4F4fDd5e36CfbA3bB6af2aA53561B39fEBB5"
   }
 }

@@ -25,7 +25,7 @@ struct jsFunction {
     }
   }
 
-  //addFunction -> adds a function that has just been deployed to the list
+//addFunction -> adds a function that has just been deployed to the list
 function insertNewFunction(string memory name, string memory signature, uint256 price, address payable dev, string memory description) public {
     availableFunctions[name] = jsFunction(name, signature, price, dev, description, true);
 }
@@ -51,7 +51,6 @@ function insertInArray(string memory name) public {
         }
     }
 
-
     //returns the function price
     function getFuncPrice(string memory funcName) public view returns(uint256){
         uint256 _price = availableFunctions[funcName].price;
@@ -67,16 +66,22 @@ function insertInArray(string memory name) public {
     //returns the list of functions in this format (all in one line) :
     /*[{"name":"function name","price":"price of function","developer","developer address"},
         {"name":"function name 2","price":"price of function 2","developer","developer address"},...]*/
-    function getList () public view returns(string memory){
+    function getList (address payable dev, bool listOwned) public view returns(string memory){
         string memory result;
         for(uint index = 0; index < functionNames.length; index++){
             string memory _name = functionNames[index];
-            result = string(abi.encodePacked(result, singleFuncJson(_name, false)));
-            if(index != functionNames.length - 1){result = string(abi.encodePacked(result, ","));}
+            if(listOwned){
+                if(getFuncDev(_name) == dev){
+                    result = string(abi.encodePacked(result, singleFuncJson(_name, false)));
+                    if(index != functionNames.length - 1){result = string(abi.encodePacked(result, ","));}
+                }
+            }else{
+                result = string(abi.encodePacked(result, singleFuncJson(_name, false)));
+                if(index != functionNames.length - 1){result = string(abi.encodePacked(result, ","));}
+            }
         }
         return string(abi.encodePacked("{\"functionArray\":[",result,"]}"));
     }
-
     //returns the information of a single function
     function getFuncInfo (string memory funcName) public view returns(string memory){
         return singleFuncJson(funcName, true);
