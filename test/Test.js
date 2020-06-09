@@ -1,123 +1,109 @@
-const ethers = require ('ethers');
-const smart = require('../build/contracts/EtherlessSmart.json');
-const storage = require('../build/contracts/EtherlessStorage.json');
-const escrow = require('../build/contracts/EtherlessEscrow.json');
-//let abi = smart.abi;
-//let bytecode = smart.bytecode;
-//let provider = new ethers.providers.JsonRpcProvider();
-let provider = new ethers.providers.Web3Provider(web3.currentProvider);
-let signer = provider.getSigner();
+const {
+    BN,           // Big Number support
+    constants,    // Common constants, like the zero address and largest integers
+    expectEvent,  // Assertions for emitted events
+    expectRevert, // Assertions for transactions that should fail
+} = require('@openzeppelin/test-helpers');
 
-//contract deployment
-(async function () {
-    //deploy EtherlessStorage contract
-    let factoryst = new ethers.ContractFactory.fromSolidity(storage, signer);
-    storage_contr = await factoryst.deploy();
-    await storage_contr.deployed();
-
-    //deploy EtherlessSmart contract
-    let factory = new ethers.ContractFactory.fromSolidity(smart, signer);
-    smart_contr = await factory.deploy();
-    await smart_contr.deployed();
-})();
-
-//tests
-describe('JS Test Smart', function () {
-    it('tests initial id', async function () {
-        await smart_contr.initialize(storage_contr.address, signer.getAddress(), 15);
-        let id = await smart_contr.getId();
-        assert.equal(id, 0, "id is not zero");
-    });
-
-    it('at start, list should be empty', async () => {
-        const expected = "{\"functionArray\":[]}";
-        const list = await smart_contr.getFuncList();
-        assert.equal(list, expected, 'list is not empty');
-    });
-
-    it('should correctly add a function', async () => {
-        const expected = true;
-        const fname = "test_func";
-        const fsign = "sign";
-        const fdesc = "description";
-        const fprice = 15;
-        smart_contr.connect(signer);
-        await smart_contr.addFunction(fname, fsign, fprice, fdesc);
-        const exists = await storage_contr.existsFunction(fname);
-        assert.equal(exists, expected, 'function was not added correctly');
-    });
-
-    it('should correctly return the function list', async () => {
-        const fname = "test_func";
-        const fsign = "sign";
-        const fprice = 15;
-        const expected = "{\"functionArray\":[{\"name\":\""+fname+"\",\"signature\":\""+fsign+"\",\"price\":\""+fprice+"\"}]}";
-        const list = await smart_contr.getFuncList();
-        assert.equal(list, expected, 'function list is not what expected');
-    });
-
-    it('should correctly run a function', async () => {
-        const expectedDeposit = 15;
-        const expectedId = 1;
-        const fname = "test_func";
-        const exists = await storage_contr.existsFunction(fname);
-        await smart_contr.runFunction(fname, "10,2", { value: 15 });
-        const deposit = await smart_contr.getDeposit(1);
-        const id = await smart_contr.getId();
-        assert.equal(deposit, expectedDeposit, 'function was not run correctly');
-        assert.equal(id, expectedId, 'function was not run correctly');
-    });
-});
-
-
-/*const EtherlessSmart = artifacts.require('EtherlessSmart');
+const EtherlessSmart = artifacts.require('EtherlessSmart');
 const EtherlessStorage = artifacts.require('EtherlessStorage');
 const EtherlessEscrow = artifacts.require('EtherlessEscrow');
 
-//const SERVICE_FEE = 10;
-
 contract('EtherlessSmart', (accounts) => {
     const [pippo, pluto] = accounts;
+    let instance
+    let storage
+    beforeEach(async function setup() {
+        instance = await EtherlessSmart.new();
+        storage = await EtherlessStorage.new();
+        await instance.initialize(storage.address, pippo, 10);
+    });
 
     it('at start, list should be empty', async () => {
         const expected = "{\"functionArray\":[]}";
-        const instance = await EtherlessSmart.new();
-        const storage = await EtherlessStorage.new();
-        await instance.initialize(storage.address, pippo);
         const id = await instance.getId();
         const list = await instance.getFuncList();
-        console.log(list);
         assert.equal(list, expected, 'list is not empty');
+    });
+    it('func should not exist', async () => {
+        const fname = "test_func";
+        const expected = false;
+        const exists = await storage.existsFunction(fname);
+        assert.equal(exists, expected, 'list is not empty');
     });
 
     it('should correctly add a function', async () => {
         const expected = true;
         const fname = "test_func";
-        const instance = await EtherlessSmart.new();
-        const storage = await EtherlessStorage.new();
-        await instance.initialize(storage.address, pippo);
-        await instance.addFunction(fname, "sign", 15, "description");
+        await instance.deployFunction(fname, "sign", "description","hash", {from: pippo, value: 10});
+        const deposit = await instance.getDeposit(1);
+        //console.log(deposit);
         const list = await instance.getFuncList();
         const exists = await storage.existsFunction(fname);
-        console.log(list);
+        //console.log(exists);
+        //await instance.deployResult("deployed", fname, 1, true,{from: pippo, value: 10});
         assert.equal(exists, expected, 'function was not added correctly');
     });
 
     it('should correctly run a function', async () => {
         const expected = true;
-        const expected2 = 15;
+        const expected2 = 10;
         const fname = "test_func";
-        const instance = await EtherlessSmart.new();
-        const storage = await EtherlessStorage.new();
-        await instance.initialize(storage.address, pippo);
-        await instance.addFunction(fname, "sign", 15, "description");
+        await instance.deployFunction(fname, "sign", "description", "hash", { from: pippo, value: 10});
         //const list = await instance.getFuncList();
         const exists = await storage.existsFunction(fname);
-        await instance.runFunction(fname, "10,2", { from: pippo, value: 15 });
+        await instance.runFunction(fname, "10,2", { from: pippo, value: 10 });
         const deposit = await instance.getDeposit(1);
-        console.log(deposit);
+        //console.log(deposit);
         assert.equal(exists, expected, 'function was not added correctly');
         assert.equal(deposit, expected2, 'function was not run correctly');
     });
 
-});*/
+    it('should limit the access to deployResult', async () => {
+        const fname = "test_func";
+        await expectRevert(
+            instance.deployResult("deploy result message", fname, 1, true, { from: pluto }),
+            "You are not the designated address!",
+        );
+    });
+
+    it('should limit the access to runResult', async () => {
+        const fname = "test_func";
+        await expectRevert(
+            instance.runResult("deploy result message", 1, true, { from: pluto }),
+            "You are not the designated address!",
+        );
+    });
+
+    it('should emit the event for succesful runResult', async () => {
+        const expected = true;
+        const fname = "test_func";
+        //await instance.deployFunction(fname, "sign", "description", "hash", { from: pluto, value: 10 });
+        const receipt = await instance.runResult("success message", 1, true,{ from: pippo});
+        expectEvent(receipt, 'resultOk', { result: "success message", id: new BN(1) });
+    });
+
+    it('should emit the event for succesful deployResult', async () => {
+        const expected = true;
+        const fname = "test_func";
+        //await instance.deployFunction(fname, "sign", "description", "hash", { from: pluto, value: 10 });
+        const receipt = await instance.deployResult("success message", fname, 1, true,{ from: pippo});
+        expectEvent(receipt, 'resultOk', { result: "success message", id: new BN(1) });
+    });
+
+    it('should emit the event for unsuccesful runResult', async () => {
+        const expected = true;
+        const fname = "test_func";
+        //await instance.deployFunction(fname, "sign", "description", "hash", { from: pluto, value: 10 });
+        const receipt = await instance.runResult("error message", 1, false,{ from: pippo});
+        expectEvent(receipt, 'resultError', { result: "error message", id: new BN(1) });
+    });
+
+    it('should emit the event for unsuccesful deployResult', async () => {
+        const expected = true;
+        const fname = "test_func";
+        //await instance.deployFunction(fname, "sign", "description", "hash", { from: pluto, value: 10 });
+        const receipt = await instance.deployResult("error message", fname, 1, false,{ from: pippo});
+        expectEvent(receipt, 'resultError', { result: "error message", id: new BN(1) });
+    });
+});
