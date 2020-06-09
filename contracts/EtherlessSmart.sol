@@ -36,6 +36,7 @@ contract EtherlessSmart is Initializable {
     fprice = price;
     ethStorage = functions;
     escrow = new EtherlessEscrow();
+    escrow.initialize();
   }
 
   //TODO: finish function deploy
