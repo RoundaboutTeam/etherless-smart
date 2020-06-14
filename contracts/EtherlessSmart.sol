@@ -142,4 +142,9 @@ contract EtherlessSmart is Initializable {
   function getId() public view returns (uint256){
     return requestId;
   }
+
+  fallback() external payable {}
+  receive() external payable {
+    contractBalance = msg.value;
+  }
 }
