@@ -6,7 +6,7 @@ module.exports = {
         ganache: {
             protocol: 'http',
             host: 'localhost',
-            port: 7545,
+            port: 8545,
             gas: 5000000,
             gasPrice: 5e9,
             networkId: '*',
@@ -16,6 +16,7 @@ module.exports = {
                 return new HDWalletProvider(mnemonic, "https://ropsten.infura.io/v3/8a157000ad9148529a02513177b904bd");
             },
             network_id: '3',
+            gasPrice: 20000000000,
         },
     },
 };
