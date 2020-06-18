@@ -1,129 +1,151 @@
 pragma solidity >=0.4.22 <0.7.0;
 
-//TO DO//
-//getFuncInfo -> returns all the info stored in the mapping
-//deployFunction -> deployes the user developed function
-//deleteFunction -> delete one of the caller's owned functions in AWS
+import "./EtherlessStorage.sol";
+import "./EtherlessEscrow.sol";
+import "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol";
 
-contract EtherlessSmart {
-  address ownerAddress;
-  uint256 balance = 0;
-  uint256 requestId; //incremented at every run request
+contract EtherlessSmart is Initializable {
 
-  struct jsFunction {
-    string name;
-    //maybe add function signature!
-    uint256 price; // wei
-    address payable developer;
-    bool exists;
-  }
+  address payable ownerAddress;
+  address serverAddress;
+  uint256 contractBalance;
+  uint256 requestId;
+  uint256 fprice;
 
-  mapping (string => jsFunction) private availableFunctions; //check if struct in mapping is set to 0 by default
-  bytes32[] functionNames;
+  EtherlessStorage private ethStorage;
+  EtherlessEscrow private escrow;
 
   //events
-  //event run
+  event deployRequest(string funcname, string signature, string funchash, uint256 indexed id);
   event runRequest(string funcname, string param, uint256 indexed id);
-  //event response
-  event response(string result, uint256 indexed id);
+  event deleteRequest(string funcname, uint256 indexed id);
+  event resultOk(string result, uint256 indexed id);
+  event resultError(string result, uint256 indexed id);
 
-  constructor() public {
-    ownerAddress = msg.sender;
-    requestId = 0;
-  }
-
-  modifier onlyOwner(address _invokedFrom) {
-    require(_invokedFrom == ownerAddress, "You are not the owner of the contract!");
+  modifier onlyServer(address invokedFrom) {
+    require(invokedFrom == serverAddress, "You are not the designated address!");
     _;
   }
 
-  //FUNCTIONS THAT ENABLE TYPE CONVERSION BETWEEN STRING AND BYTES32
-  //converts a string to bytes32
-  function stringToBytes(string memory source) public pure returns (bytes32 result) {
-    bytes memory tempEmptyStringTest = bytes(source);
-    if(tempEmptyStringTest.length == 0) {
-        return 0x0;
-    } assembly {
-        result := mload(add(source, 32))
-    }
+  //TODO: check for removal of contractBalance
+  function initialize (EtherlessStorage functions, address serverAddr, uint256 price) initializer public {
+    ownerAddress = payable(address(this));
+    serverAddress = serverAddr;
+    contractBalance = 0;
+    requestId = 0;
+    fprice = price;
+    ethStorage = functions;
+    escrow = new EtherlessEscrow();
+    escrow.initialize();
   }
 
-  //converts a bytes32 to string
-  function bytes32ToStr(bytes32 _bytes32) public pure returns (string memory) {
-    bytes memory bytesArray = new bytes(32);
-    for (uint256 i; i < 32; i++) {
-        bytesArray[i] = _bytes32[i];
-        }
-    return string(bytesArray);
-    }
-
-  //FUNCTIONS THAT IMPLEMENT OPERATIONS ON THE AVAILABLEFUNCTIONS LIST
-  //getList -> returns the full list of names of available functions
-  function getList() public view returns (bytes32[] memory) {
-    return functionNames;
-  }
-
-  //existsFunction -> checks if a certain function is in the availableFunctions list
-  function existsFunction(string memory name) public view returns (bool) {
-    if(availableFunctions[name].exists) {
-        return true;
-    } else {
-        return false;
-    }
-  }
-
-  //addFunction -> adds a function that has just been deployed to the list
-  function addFunction(string memory name, uint256 price) public {
-    address payable developer = msg.sender;
-    availableFunctions[name] = jsFunction(name, price, developer, true);
-    functionNames.push(stringToBytes(name));
-  }
-
-  //removeFunction -> removes a given function from availableFunctions list
-  function removeFunction(string memory toRemove) public {
-    delete availableFunctions[toRemove];
-    for (uint index = 0; index < functionNames.length; index++) {
-        if(functionNames[index] == stringToBytes(toRemove)){
-            //delete functionNames[index]; //check if length is correct after deleting an element
-            functionNames[index] = functionNames[functionNames.length - 1];
-            functionNames.pop();
-        }
-    }
-  }
-
-//MAIN COMMANDS
-  //runFunction -> requests execution of the function
-  function runFunction(string memory funcName, string memory param) public payable {
-    require(existsFunction(funcName), "The function you're looking for does not exist! :'(");
-    uint256 funcPrice = availableFunctions[funcName].price;
-    address payable funcDev = availableFunctions[funcName].developer;
-
-    require(msg.value >= funcPrice, "Insufficient amount sent! :'(");
-    balance += msg.value;
-
-    sendAmount(funcDev, funcPrice);
+  //TODO: finish function deploy
+  //[DEPLOY] adds a function to the list
+  function deployFunction(string memory name, string memory signature, string memory description, string memory funchash) public payable {
+    require(ethStorage.existsFunction(name) == false, "A function with the same name already exist!");
+    require(msg.value >= fprice, "Insufficient amount sent! :(");
 
     getNewId();
+    escrow.deposit{value: fprice}(msg.sender, ownerAddress, fprice, requestId);
+    ethStorage.insertNewFunction(name, signature, fprice, msg.sender, description);
+    
+    deployRequest(name, signature, funchash, requestId);
+  }
+
+  //[RUN] runFunction -> requests execution of the function
+  function runFunction(string memory funcName, string memory param) public payable {
+    require(ethStorage.existsFunction(funcName), "The function you're looking for does not exist! :'(");
+    uint256 funcPrice = ethStorage.getFuncPrice(funcName);
+    address payable funcDev = ethStorage.getFuncDev(funcName);
+
+    require(msg.value >= funcPrice, "Insufficient amount sent! :'(");
+    //contractBalance += msg.value;
+    getNewId();
+    escrow.deposit{value: funcPrice}(msg.sender, funcDev, funcPrice, requestId);
     emit runRequest(funcName, param, requestId);
   }
 
-  //resultFunction -> returns the result of a function execution
-  function resultFunction(string memory result, uint256 id) public onlyOwner(msg.sender){
-    emit response(result, id);
+  function deleteFunction(string memory name) public payable {
+    require(ethStorage.existsFunction(name) == true, "The function you're looking for does not exist! :'(");
+    require(msg.value >= fprice, "Insufficient amount sent! :(");
+    //require(getFuncDev(name) == msg.sender, "You are not the owner of the function! :(");
+
+    getNewId();
+    escrow.deposit{value: fprice}(msg.sender, ownerAddress, fprice, requestId);
+    emit deleteRequest(name, requestId);
   }
 
-  function getBalance() public view returns (uint256){
-    return balance;
- }
+  function deployResult(string memory message, string memory name, uint256 id, bool successful) public onlyServer(msg.sender) {
+    if(successful == true) {
+      escrow.withdraw(escrow.getBeneficiary(id), id);
+      ethStorage.insertInArray(name);
+      emit resultOk(message, id);
+    } else {
+      escrow.withdraw(escrow.getSender(id), id);
+      ethStorage.removeFunction(name);
+      emit resultError(message, id);
+    }
+  }
 
-  //sendAmount -> sends the given amount to a certain address
- function sendAmount(address payable to, uint256 amount) public {
-   balance -= amount; //remainder from payment
-   to.transfer(amount);
- }
+  function runResult(string memory message, uint256 id, bool successful) public onlyServer(msg.sender) {
+     if(successful == true) {
+      escrow.withdraw(escrow.getBeneficiary(id), id);
+      emit resultOk(message, id);
+    } else {
+      escrow.withdraw(escrow.getSender(id), id);
+      emit resultError(message, id);
+    }
+  }
 
+  function deleteResult(string memory message, string memory name, uint256 id, bool successful) public onlyServer(msg.sender) {
+    if(successful == true) {
+      escrow.withdraw(escrow.getBeneficiary(id), id);
+      ethStorage.removeFunction(name);
+      ethStorage.removeFromArray(name);
+      emit resultOk(message, id);
+    } else {
+      escrow.withdraw(escrow.getSender(id), id);
+      emit resultError(message, id);
+    }
+  }
+
+  //returns the price of a single function
+  function getCost(string memory funcName) public view returns (uint256){
+    return ethStorage.getFuncPrice(funcName);
+  }
+
+  //[INFO] returns the information of a single function
+  function getInfo(string memory funcName) public view returns (string memory){
+    require(ethStorage.existsFunction(funcName), "The function you're looking for does not exist! :'(");
+    return ethStorage.getFuncInfo(funcName);
+  }
+
+  //[LIST] returns a list of all the available functions
+  function getFuncList() public view returns (string memory){
+    return ethStorage.getList();
+  }
+  //[LIST] returns a list of all the available functions
+  function getOwnedList(address payable dev) public view returns (string memory){
+    return ethStorage.getDevList(dev);
+  }
+
+  //TODO: test if id creation is fixed
   //getNewId -> increments requestId
- function getNewId() private returns (uint256){
-   return requestId++;
- }
+  function getNewId() private returns (uint256){
+    requestId = requestId+1;
+    return requestId;
+  }
+
+  function getDeposit(uint256 id) public view returns (uint256){
+    return escrow.depositsOf(id);
+  }
+
+  function getId() public view returns (uint256){
+    return requestId;
+  }
+
+  fallback() external payable {}
+  receive() external payable {
+    contractBalance = msg.value;
+  }
 }

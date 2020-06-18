@@ -1,2 +1,7 @@
 node_modules
 build
+coverage
+coverage.json
+.openzeppelin/.session
+
+.openzeppelin\.session
