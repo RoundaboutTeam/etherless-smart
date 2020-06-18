@@ -18,24 +18,33 @@ struct jsFunction {
   //FUNCTIONS THAT IMPLEMENT OPERATIONS ON THE AVAILABLEFUNCTIONS LIST
   //existsFunction -> checks if a certain function is in the availableFunctions list
   function existsFunction(string memory name) public view returns (bool) {
-    if(availableFunctions[name].exists) {
-        return true;
-    } else {
-        return false;
+    for (uint index = 0; index < functionNames.length; index++) {
+        if(compareString(functionNames[index], name)){
+            return true;
+        }
     }
+    return false;
   }
 
-  //addFunction -> adds a function that has just been deployed to the list
+//addFunction -> adds a function that has just been deployed to the list
 function insertNewFunction(string memory name, string memory signature, uint256 price, address payable dev, string memory description) public {
     availableFunctions[name] = jsFunction(name, signature, price, dev, description, true);
+}
+
+//inserts the corresponding array entry
+function insertInArray(string memory name) public {
     functionNames.push(name);
 }
 
 //removeFunction -> removes a given function from availableFunctions list
     function removeFunction(string memory toRemove) public {
         delete availableFunctions[toRemove];
+    }
+
+//removes the corresponding array entry
+    function removeFromArray(string memory name) public {
         for (uint index = 0; index < functionNames.length; index++) {
-            if(compareString(functionNames[index], toRemove)) {
+            if(compareString(functionNames[index], name)) {
                 //delete functionNames[index]; //check if length is correct after deleting an element
                 functionNames[index] = functionNames[functionNames.length - 1];
                 functionNames.pop();
@@ -67,7 +76,24 @@ function insertNewFunction(string memory name, string memory signature, uint256 
         }
         return string(abi.encodePacked("{\"functionArray\":[",result,"]}"));
     }
-
+    
+    function getDevList (address payable dev) public view returns(string memory){
+        string memory result;
+        uint256 count;
+        for(uint index = 0; index < functionNames.length; index++){
+            string memory _name = functionNames[index];
+            if(getFuncDev(_name) == dev){count = count+1;}
+        }
+        for(uint index = 0; index < functionNames.length && count > 0; index++){
+            string memory _name = functionNames[index];
+            if(getFuncDev(_name) == dev){
+                result = string(abi.encodePacked(result, singleFuncJson(_name, false)));
+                if(count != 1){result = string(abi.encodePacked(result, ","));}
+                count--;
+            }
+        }
+        return string(abi.encodePacked("{\"functionArray\":[",result,"]}"));
+    }
     //returns the information of a single function
     function getFuncInfo (string memory funcName) public view returns(string memory){
         return singleFuncJson(funcName, true);
