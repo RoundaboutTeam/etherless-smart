@@ -1,11 +1,11 @@
 {
   "contracts": {
     "EtherlessSmart": {
-      "address": "0xA5470973214B6Ca00Ed4091077bBFB121b31FC5f",
-      "constructorCode": "608060405234801561001057600080fd5b50614edd806100206000396000f3fe",
-      "bodyBytecodeHash": "f77d134baf164c7d20981ea90db3f72ef799645c23aeea6e0e3a0ad57630c6a8",
-      "localBytecodeHash": "39a6eccf6aa5c422d8f5f9cbc0a1e05c58a50b08301a109ad922849839b74117",
-      "deployedBytecodeHash": "39a6eccf6aa5c422d8f5f9cbc0a1e05c58a50b08301a109ad922849839b74117",
+      "address": "0x84BB8927ccBa5d6dc9D55bef5b4a39e30d94fed1",
+      "constructorCode": "608060405234801561001057600080fd5b50614e8c806100206000396000f3fe",
+      "bodyBytecodeHash": "0c0aa82e4061d333df4514ed11b88ebe00a622101e0a93823605575d35c669e4",
+      "localBytecodeHash": "3b64f8d99b40b5b5076249e8fab17b97d8f178d91a139c2f08c13d589c65505d",
+      "deployedBytecodeHash": "3b64f8d99b40b5b5076249e8fab17b97d8f178d91a139c2f08c13d589c65505d",
       "types": {
         "t_bool": {
           "id": "t_bool",
@@ -40,7 +40,7 @@
           "contract": "Initializable",
           "path": "@openzeppelin\\contracts-ethereum-package\\contracts\\Initializable.sol",
           "label": "initialized",
-          "astId": 1422,
+          "astId": 1503,
           "type": "t_bool",
           "src": "757:24:5"
         },
@@ -48,7 +48,7 @@
           "contract": "Initializable",
           "path": "@openzeppelin\\contracts-ethereum-package\\contracts\\Initializable.sol",
           "label": "initializing",
-          "astId": 1424,
+          "astId": 1505,
           "type": "t_bool",
           "src": "876:25:5"
         },
@@ -56,7 +56,7 @@
           "contract": "Initializable",
           "path": "@openzeppelin\\contracts-ethereum-package\\contracts\\Initializable.sol",
           "label": "______gap",
-          "astId": 1489,
+          "astId": 1570,
           "type": "t_array:50<t_uint256>",
           "src": "1982:29:5"
         },
@@ -128,11 +128,11 @@
       }
     },
     "EtherlessStorage": {
-      "address": "0x8Bb8beC8DeA7B2344B7e3104A860478b1290e087",
-      "constructorCode": "608060405234801561001057600080fd5b506122fd806100206000396000f3fe",
-      "bodyBytecodeHash": "1428149c5a268ae1062fd444f76f0833cce5bd3b96b9be907d9b1a00c59669a9",
-      "localBytecodeHash": "8fa8eeebc6cb901fe82df9357050a4feb3e63c43d0fc0f4233273516d8cb1260",
-      "deployedBytecodeHash": "8fa8eeebc6cb901fe82df9357050a4feb3e63c43d0fc0f4233273516d8cb1260",
+      "address": "0x2309e89d5cccAbebeEAf860c944D5Fc95a65F9BF",
+      "constructorCode": "608060405234801561001057600080fd5b50612699806100206000396000f3fe",
+      "bodyBytecodeHash": "7ca4a1ec67bf56e1842633fe2558f4ad997187fc4b277ebd610d7b63a239b737",
+      "localBytecodeHash": "17f754816474979d2ee928f8503f5e5dbd8eca3d8254c90f44f1e08d51ed02ae",
+      "deployedBytecodeHash": "17f754816474979d2ee928f8503f5e5dbd8eca3d8254c90f44f1e08d51ed02ae",
       "types": {
         "t_struct<EtherlessStorage.jsFunction>": {
           "id": "t_struct<EtherlessStorage.jsFunction>",
@@ -141,37 +141,37 @@
           "members": [
             {
               "label": "name",
-              "astId": 691,
+              "astId": 700,
               "type": "t_string",
               "src": "92:11:2"
             },
             {
               "label": "signature",
-              "astId": 693,
+              "astId": 702,
               "type": "t_string",
               "src": "110:16:2"
             },
             {
               "label": "price",
-              "astId": 695,
+              "astId": 704,
               "type": "t_uint256",
               "src": "170:13:2"
             },
             {
               "label": "developer",
-              "astId": 697,
+              "astId": 706,
               "type": "t_address_payable",
               "src": "197:25:2"
             },
             {
               "label": "description",
-              "astId": 699,
+              "astId": 708,
               "type": "t_string",
               "src": "229:18:2"
             },
             {
               "label": "exists",
-              "astId": 701,
+              "astId": 710,
               "type": "t_bool",
               "src": "254:11:2"
             }
@@ -216,7 +216,7 @@
           "contract": "EtherlessStorage",
           "path": "..\\..\\..\\..\\..\\C\\Users\\verof\\Documents\\GitHub\\etherless-smart\\contracts\\EtherlessStorage.sol",
           "label": "availableFunctions",
-          "astId": 706,
+          "astId": 715,
           "type": "t_mapping<t_struct<EtherlessStorage.jsFunction>>",
           "src": "277:57:2"
         },
@@ -224,7 +224,7 @@
           "contract": "EtherlessStorage",
           "path": "..\\..\\..\\..\\..\\C\\Users\\verof\\Documents\\GitHub\\etherless-smart\\contracts\\EtherlessStorage.sol",
           "label": "functionNames",
-          "astId": 709,
+          "astId": 718,
           "type": "t_array:dyn<t_string>",
           "src": "391:22:2"
         }
@@ -240,7 +240,7 @@
             "contract": "EtherlessStorage",
             "path": "..\\..\\..\\..\\..\\C\\Users\\verof\\Documents\\GitHub\\etherless-smart\\contracts\\EtherlessStorage.sol",
             "label": "availableFunctions",
-            "astId": 706,
+            "astId": 715,
             "type": "t_mapping<t_struct<EtherlessStorage.jsFunction>>",
             "src": "277:57:2"
           }
@@ -269,7 +269,7 @@
       {
         "address": "0x492E7f960330E8154D0Ef1b9A7F50956FaFa1Fa6",
         "version": "1.0.0",
-        "implementation": "0x8Bb8beC8DeA7B2344B7e3104A860478b1290e087",
+        "implementation": "0x2309e89d5cccAbebeEAf860c944D5Fc95a65F9BF",
         "admin": "0x898b4F4fDd5e36CfbA3bB6af2aA53561B39fEBB5",
         "kind": "Upgradeable"
       }
@@ -285,7 +285,7 @@
       {
         "address": "0x7eAF55b6E2126f7931aeC056C7839716b804c767",
         "version": "1.0.0",
-        "implementation": "0xA5470973214B6Ca00Ed4091077bBFB121b31FC5f",
+        "implementation": "0x84BB8927ccBa5d6dc9D55bef5b4a39e30d94fed1",
         "admin": "0x898b4F4fDd5e36CfbA3bB6af2aA53561B39fEBB5",
         "kind": "Upgradeable"
       }

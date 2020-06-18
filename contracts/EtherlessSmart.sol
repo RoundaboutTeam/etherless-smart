@@ -68,6 +68,7 @@ contract EtherlessSmart is Initializable {
   function deleteFunction(string memory name) public payable {
     require(ethStorage.existsFunction(name) == true, "The function you're looking for does not exist! :'(");
     require(msg.value >= fprice, "Insufficient amount sent! :(");
+    //require(getFuncDev(name) == msg.sender, "You are not the owner of the function! :(");
 
     getNewId();
     escrow.deposit{value: fprice}(msg.sender, ownerAddress, fprice, requestId);
@@ -121,11 +122,11 @@ contract EtherlessSmart is Initializable {
 
   //[LIST] returns a list of all the available functions
   function getFuncList() public view returns (string memory){
-    return ethStorage.getList(msg.sender, false);
+    return ethStorage.getList();
   }
   //[LIST] returns a list of all the available functions
   function getOwnedList(address payable dev) public view returns (string memory){
-    return ethStorage.getList(dev, true);
+    return ethStorage.getDevList(dev);
   }
 
   //TODO: test if id creation is fixed

@@ -25,38 +25,46 @@ contract('EtherlessSmart', (accounts) => {
         const list = await instance.getFuncList();
         assert.equal(list, expected, 'list is not empty');
     });
+
     it('func should not exist', async () => {
         const fname = "test_func";
         const expected = false;
         const exists = await storage.existsFunction(fname);
-        assert.equal(exists, expected, 'list is not empty');
+        assert.equal(exists, expected, 'function exists');
     });
 
-    it('should correctly add a function', async () => {
-        const expected = true;
+    it('should correctly send request to add a function', async () => {
+        const expected = 10;
         const fname = "test_func";
-        await instance.deployFunction(fname, "sign", "description","hash", {from: pippo, value: 10});
+        const receipt = await instance.deployFunction(fname, "sign", "description","hash", {from: pippo, value: 10});
+        expectEvent(receipt, 'deployRequest', { funcname: fname, signature: "sign", funchash: "hash", id: new BN(1) });
         const deposit = await instance.getDeposit(1);
-        //console.log(deposit);
-        const list = await instance.getFuncList();
-        const exists = await storage.existsFunction(fname);
-        //console.log(exists);
-        //await instance.deployResult("deployed", fname, 1, true,{from: pippo, value: 10});
-        assert.equal(exists, expected, 'function was not added correctly');
+        assert.equal(deposit, expected, 'function was not added correctly');
     });
 
-    it('should correctly run a function', async () => {
-        const expected = true;
-        const expected2 = 10;
+    it('should correctly send request to run a function', async () => {
+        const expected = 10;
         const fname = "test_func";
-        await instance.deployFunction(fname, "sign", "description", "hash", { from: pippo, value: 10});
+        //mock deployed function
+        await storage.insertNewFunction(fname, "sign", 10, pippo, "description", { from: pippo});
+        await storage.insertInArray(fname,{ from: pippo});
+        const receipt = await instance.runFunction(fname, "10,2", { from: pippo, value: 10 });
+        const deposit = await instance.getDeposit(1);
+        expectEvent(receipt, 'runRequest', { funcname: fname, param:"10,2", id: new BN(1) });
+        assert.equal(deposit, expected, 'function was not run correctly');
+    });
+
+    it('should correctly send request to delete a function', async () => {
+        const expected = 10;
+        const fname = "test_func";
+        //mock deployed function
+        await storage.insertNewFunction(fname, "sign", 10, pippo, "description", { from: pippo });
+        await storage.insertInArray(fname, { from: pippo });
         //const list = await instance.getFuncList();
-        const exists = await storage.existsFunction(fname);
-        await instance.runFunction(fname, "10,2", { from: pippo, value: 10 });
+        const receipt = await instance.deleteFunction(fname, { from: pippo, value: 10 });
         const deposit = await instance.getDeposit(1);
-        //console.log(deposit);
-        assert.equal(exists, expected, 'function was not added correctly');
-        assert.equal(deposit, expected2, 'function was not run correctly');
+        expectEvent(receipt, 'deleteRequest', { funcname: fname, id: new BN(1) });
+        assert.equal(deposit, expected, 'function was not deleted correctly');
     });
 
     it('should limit the access to deployResult', async () => {
@@ -70,7 +78,15 @@ contract('EtherlessSmart', (accounts) => {
     it('should limit the access to runResult', async () => {
         const fname = "test_func";
         await expectRevert(
-            instance.runResult("deploy result message", 1, true, { from: pluto }),
+            instance.runResult("run result message", 1, true, { from: pluto }),
+            "You are not the designated address!",
+        );
+    });
+
+    it('should limit the access to deleteResult', async () => {
+        const fname = "test_func";
+        await expectRevert(
+            instance.deleteResult("delete result message", fname, 1, true, { from: pluto }),
             "You are not the designated address!",
         );
     });

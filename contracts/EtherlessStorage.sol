@@ -18,11 +18,12 @@ struct jsFunction {
   //FUNCTIONS THAT IMPLEMENT OPERATIONS ON THE AVAILABLEFUNCTIONS LIST
   //existsFunction -> checks if a certain function is in the availableFunctions list
   function existsFunction(string memory name) public view returns (bool) {
-    if(availableFunctions[name].exists) {
-        return true;
-    } else {
-        return false;
+    for (uint index = 0; index < functionNames.length; index++) {
+        if(compareString(functionNames[index], name)){
+            return true;
+        }
     }
+    return false;
   }
 
 //addFunction -> adds a function that has just been deployed to the list
@@ -66,18 +67,29 @@ function insertInArray(string memory name) public {
     //returns the list of functions in this format (all in one line) :
     /*[{"name":"function name","price":"price of function","developer","developer address"},
         {"name":"function name 2","price":"price of function 2","developer","developer address"},...]*/
-    function getList (address payable dev, bool listOwned) public view returns(string memory){
+    function getList () public view returns(string memory){
         string memory result;
         for(uint index = 0; index < functionNames.length; index++){
             string memory _name = functionNames[index];
-            if(listOwned){
-                if(getFuncDev(_name) == dev){
-                    result = string(abi.encodePacked(result, singleFuncJson(_name, false)));
-                    if(index != functionNames.length - 1){result = string(abi.encodePacked(result, ","));}
-                }
-            }else{
+            result = string(abi.encodePacked(result, singleFuncJson(_name, false)));
+            if(index != functionNames.length - 1){result = string(abi.encodePacked(result, ","));}
+        }
+        return string(abi.encodePacked("{\"functionArray\":[",result,"]}"));
+    }
+    
+    function getDevList (address payable dev) public view returns(string memory){
+        string memory result;
+        uint256 count;
+        for(uint index = 0; index < functionNames.length; index++){
+            string memory _name = functionNames[index];
+            if(getFuncDev(_name) == dev){count = count+1;}
+        }
+        for(uint index = 0; index < functionNames.length && count > 0; index++){
+            string memory _name = functionNames[index];
+            if(getFuncDev(_name) == dev){
                 result = string(abi.encodePacked(result, singleFuncJson(_name, false)));
-                if(index != functionNames.length - 1){result = string(abi.encodePacked(result, ","));}
+                if(count != 1){result = string(abi.encodePacked(result, ","));}
+                count--;
             }
         }
         return string(abi.encodePacked("{\"functionArray\":[",result,"]}"));
