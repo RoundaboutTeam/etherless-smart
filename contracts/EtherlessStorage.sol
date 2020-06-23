@@ -52,6 +52,10 @@ function insertInArray(string memory name) public {
         }
     }
 
+    function modifyFunction(string memory name, string memory newSignature) public {
+        availableFunctions[name].signature = newSignature;
+    }
+
     //returns the function price
     function getFuncPrice(string memory funcName) public view returns(uint256){
         uint256 _price = availableFunctions[funcName].price;

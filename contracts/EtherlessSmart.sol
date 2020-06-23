@@ -23,6 +23,7 @@ contract EtherlessSmart is Initializable {
   event deployRequest(string funcname, string signature, string funchash, uint256 indexed id);
   event runRequest(string funcname, string param, uint256 indexed id);
   event deleteRequest(string funcname, uint256 indexed id);
+  event editRequest(string name, string signature, string funcHash, uint256 indexed requestId);
   event resultOk(string result, uint256 indexed id);
   event resultError(string result, uint256 indexed id);
 
@@ -98,6 +99,16 @@ contract EtherlessSmart is Initializable {
     emit deleteRequest(name, requestId);
   }
 
+  function editFunction(string memory name, string memory signature, string memory funcHash) public payable {
+    require(ethStorage.existsFunction(name) == true, "The function you're looking for does not exist! :'(");
+    require(msg.value >= fprice, "Insufficient amount sent! :(");
+    require(msg.sender == ethStorage.getFuncDev(), "You are not the owner of the function!");
+
+    getNewId();
+    escrow.deposit{value: fprice}(msg.sender, ownerAddress, fprice, requestId);
+    emit editRequest(name, signature, funcHash, requestId);
+  }
+
   /**
   * @dev forwards the deployment result, only callable from 
   *     "Etherless" server address, emits deployOk or 
@@ -151,6 +162,17 @@ contract EtherlessSmart is Initializable {
       escrow.withdraw(escrow.getBeneficiary(id), id);
       ethStorage.removeFunction(name);
       ethStorage.removeFromArray(name);
+      emit resultOk(message, id);
+    } else {
+      escrow.withdraw(escrow.getSender(id), id);
+      emit resultError(message, id);
+    }
+  }
+
+  function editResult(string memory message, string memory name, string memory signature, uint256 id, bool successful) public onlyServer(msg.sender) {
+    if(successful == true) {
+      escrow.withdraw(escrow.getBeneficiary(id), id);
+      ethStorage.modifyFunction(name, signature);
       emit resultOk(message, id);
     } else {
       escrow.withdraw(escrow.getSender(id), id);
