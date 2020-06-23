@@ -5,6 +5,10 @@ import "./EtherlessEscrow.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol";
 
 contract EtherlessSmart is Initializable {
+  /**
+  * @title main Etherless contract
+  * @author Roundabout team
+  */
 
   address payable ownerAddress;
   address serverAddress;
@@ -28,6 +32,9 @@ contract EtherlessSmart is Initializable {
   }
 
   //TODO: check for removal of contractBalance
+  /**
+  * @dev EtherlessSmart contract initializer function
+  */
   function initialize (EtherlessStorage functions, address serverAddr, uint256 price) initializer public {
     ownerAddress = payable(address(this));
     serverAddress = serverAddr;
@@ -39,8 +46,15 @@ contract EtherlessSmart is Initializable {
     escrow.initialize();
   }
 
-  //TODO: finish function deploy
   //[DEPLOY] adds a function to the list
+
+  /**
+  * @dev forwards the deployment request for a function, emits deployRequest event
+  * @param name: name of the function to deploy
+  * @param signature: should contain the signature of the function
+  * @param description: should contain the description of the function
+  * @param funchash: should contain the IPFS hash of the function code
+  */
   function deployFunction(string memory name, string memory signature, string memory description, string memory funchash) public payable {
     require(ethStorage.existsFunction(name) == false, "A function with the same name already exist!");
     require(msg.value >= fprice, "Insufficient amount sent! :(");
@@ -53,6 +67,11 @@ contract EtherlessSmart is Initializable {
   }
 
   //[RUN] runFunction -> requests execution of the function
+  /**
+  * @dev forwards the run request for a specified function, emits runRequest event
+  * @param funcName: name of the function to run
+  * @param param: parameters passed to the function
+  */
   function runFunction(string memory funcName, string memory param) public payable {
     require(ethStorage.existsFunction(funcName), "The function you're looking for does not exist! :'(");
     uint256 funcPrice = ethStorage.getFuncPrice(funcName);
@@ -65,16 +84,29 @@ contract EtherlessSmart is Initializable {
     emit runRequest(funcName, param, requestId);
   }
 
+  /**
+  * @dev forwards the deletion request for a specified function, emits deleteRequest event
+  * @param name: name of the function to delete
+  */
   function deleteFunction(string memory name) public payable {
     require(ethStorage.existsFunction(name) == true, "The function you're looking for does not exist! :'(");
     require(msg.value >= fprice, "Insufficient amount sent! :(");
-    //require(getFuncDev(name) == msg.sender, "You are not the owner of the function! :(");
+    require(ethStorage.getFuncDev(name) == msg.sender, "You are not the owner of the function!");
 
     getNewId();
     escrow.deposit{value: fprice}(msg.sender, ownerAddress, fprice, requestId);
     emit deleteRequest(name, requestId);
   }
 
+  /**
+  * @dev forwards the deployment result, only callable from 
+  *     "Etherless" server address, emits deployOk or 
+  *      deployError events based on the parameter "succesful"
+  * @param message: result message string
+  * @param name: name of the deployment function
+  * @param id: id of the deployment request
+  * @param successful: indicates the success or failure of the respective deployment request
+  */
   function deployResult(string memory message, string memory name, uint256 id, bool successful) public onlyServer(msg.sender) {
     if(successful == true) {
       escrow.withdraw(escrow.getBeneficiary(id), id);
@@ -87,6 +119,14 @@ contract EtherlessSmart is Initializable {
     }
   }
 
+  /**
+  * @dev forwards the run result, only callable from 
+  *     "Etherless" server address, emits runOk or 
+  *      runError events based on the parameter "succesful"
+  * @param message: result message string
+  * @param id: id of the run request
+  * @param successful: indicates the success or failure of the respective run request
+  */
   function runResult(string memory message, uint256 id, bool successful) public onlyServer(msg.sender) {
      if(successful == true) {
       escrow.withdraw(escrow.getBeneficiary(id), id);
@@ -96,7 +136,16 @@ contract EtherlessSmart is Initializable {
       emit resultError(message, id);
     }
   }
-
+  
+  /**
+  * @dev forwards the run result, only callable from 
+  *     "Etherless" server address, emits deleteOk or 
+  *      deleteError events based on the parameter "succesful"
+  * @param message: result message string
+  * @param name: name of the deployment function
+  * @param id: id of the run request
+  * @param successful: indicates the success or failure of the respective run request
+  */
   function deleteResult(string memory message, string memory name, uint256 id, bool successful) public onlyServer(msg.sender) {
     if(successful == true) {
       escrow.withdraw(escrow.getBeneficiary(id), id);
@@ -109,37 +158,64 @@ contract EtherlessSmart is Initializable {
     }
   }
 
-  //returns the price of a single function
+  /**
+  * @dev returns the excecution cost for a specified function
+  * @param funcName: name of the function
+  * @return specified function's cost
+  */
   function getCost(string memory funcName) public view returns (uint256){
     return ethStorage.getFuncPrice(funcName);
   }
 
-  //[INFO] returns the information of a single function
+  /**
+  * @dev returns the full information of a single function
+  * @param funcName: name of the function
+  * @return json formatted string containing the function's info
+  */
   function getInfo(string memory funcName) public view returns (string memory){
     require(ethStorage.existsFunction(funcName), "The function you're looking for does not exist! :'(");
     return ethStorage.getFuncInfo(funcName);
   }
 
-  //[LIST] returns a list of all the available functions
+  /**
+  * @dev returns a list of all the available functions
+  * @return json formatted string containing the function list
+  */
   function getFuncList() public view returns (string memory){
     return ethStorage.getList();
   }
-  //[LIST] returns a list of all the available functions
+  
+  /**
+  * @dev returns a list of all the available functions, of a specific owner
+  * @param dev: address of the owner to return the list of
+  * @return json formatted string containing the developer's function list
+  */
   function getOwnedList(address payable dev) public view returns (string memory){
     return ethStorage.getDevList(dev);
   }
 
-  //TODO: test if id creation is fixed
-  //getNewId -> increments requestId
+  /**
+  * @dev increments the request id by 1
+  * @return incremented request id
+  */
   function getNewId() private returns (uint256){
     requestId = requestId+1;
     return requestId;
   }
 
+  /**
+  * @dev returns the deposited ether of a specific request id
+  * @param id: request id
+  * @return deposit of the specified request id
+  */
   function getDeposit(uint256 id) public view returns (uint256){
     return escrow.depositsOf(id);
   }
 
+  /**
+  * @dev returns the current request id
+  * @return current request id
+  */
   function getId() public view returns (uint256){
     return requestId;
   }

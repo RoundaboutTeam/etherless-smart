@@ -67,6 +67,21 @@ contract('EtherlessSmart', (accounts) => {
         assert.equal(deposit, expected, 'function was not deleted correctly');
     });
 
+    it('should limit the access to delete a function', async () => {
+        const expected = 0;
+        const fname = "test_func";
+        //mock deployed function
+        await storage.insertNewFunction(fname, "sign", 10, pippo, "description", { from: pippo });
+        await storage.insertInArray(fname, { from: pippo });
+        
+        await expectRevert(
+            instance.deleteFunction(fname, { from: pluto, value: 10 }),
+            "You are not the owner of the function!",
+            );
+        const deposit = await instance.getDeposit(1);
+        assert.equal(deposit, expected, 'function was not deleted correctly');
+    });
+
     it('should limit the access to deployResult', async () => {
         const fname = "test_func";
         await expectRevert(
