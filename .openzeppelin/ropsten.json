@@ -1,11 +1,11 @@
 {
   "contracts": {
     "EtherlessSmart": {
-      "address": "0x84BB8927ccBa5d6dc9D55bef5b4a39e30d94fed1",
-      "constructorCode": "608060405234801561001057600080fd5b50614e8c806100206000396000f3fe",
-      "bodyBytecodeHash": "0c0aa82e4061d333df4514ed11b88ebe00a622101e0a93823605575d35c669e4",
-      "localBytecodeHash": "3b64f8d99b40b5b5076249e8fab17b97d8f178d91a139c2f08c13d589c65505d",
-      "deployedBytecodeHash": "3b64f8d99b40b5b5076249e8fab17b97d8f178d91a139c2f08c13d589c65505d",
+      "address": "0x9804D994488feBBB65Fdc89921bac93d10a2D5D7",
+      "constructorCode": "608060405234801561001057600080fd5b50615048806100206000396000f3fe",
+      "bodyBytecodeHash": "29f7145766eac79453eca8001e86de75e2b7c4ef8a60ac5ed180c284f01b3183",
+      "localBytecodeHash": "567dcca21d887a34116f8bfc3a2df9409156ae6af464d1d3df65455e8419a348",
+      "deployedBytecodeHash": "567dcca21d887a34116f8bfc3a2df9409156ae6af464d1d3df65455e8419a348",
       "types": {
         "t_bool": {
           "id": "t_bool",
@@ -40,7 +40,7 @@
           "contract": "Initializable",
           "path": "@openzeppelin\\contracts-ethereum-package\\contracts\\Initializable.sol",
           "label": "initialized",
-          "astId": 1503,
+          "astId": 1514,
           "type": "t_bool",
           "src": "757:24:5"
         },
@@ -48,7 +48,7 @@
           "contract": "Initializable",
           "path": "@openzeppelin\\contracts-ethereum-package\\contracts\\Initializable.sol",
           "label": "initializing",
-          "astId": 1505,
+          "astId": 1516,
           "type": "t_bool",
           "src": "876:25:5"
         },
@@ -56,7 +56,7 @@
           "contract": "Initializable",
           "path": "@openzeppelin\\contracts-ethereum-package\\contracts\\Initializable.sol",
           "label": "______gap",
-          "astId": 1570,
+          "astId": 1581,
           "type": "t_array:50<t_uint256>",
           "src": "1982:29:5"
         },
@@ -285,7 +285,7 @@
       {
         "address": "0x7eAF55b6E2126f7931aeC056C7839716b804c767",
         "version": "1.0.0",
-        "implementation": "0x84BB8927ccBa5d6dc9D55bef5b4a39e30d94fed1",
+        "implementation": "0x9804D994488feBBB65Fdc89921bac93d10a2D5D7",
         "admin": "0x898b4F4fDd5e36CfbA3bB6af2aA53561B39fEBB5",
         "kind": "Upgradeable"
       }
