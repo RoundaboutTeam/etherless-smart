@@ -55,6 +55,12 @@ function insertInArray(string memory name) public {
     function modifyFunction(string memory name, string memory newSignature) public {
         availableFunctions[name].signature = newSignature;
     }
+    function modifyFuncDescr(string memory name, string memory newDescription) public returns (bool){
+        availableFunctions[name].description = newDescription;
+        if(compareString(availableFunctions[name].description, newDescription) == true)
+            return true;
+        else return false;
+    }
 
     //returns the function price
     function getFuncPrice(string memory funcName) public view returns(uint256){

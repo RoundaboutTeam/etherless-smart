@@ -109,6 +109,20 @@ contract EtherlessSmart is Initializable {
     emit editRequest(name, signature, funcHash, requestId);
   }
 
+  function editFunctionDescr(string memory name, string memory descr) public payable {
+    require(ethStorage.existsFunction(name) == true, "The function you're looking for does not exist! :'(");
+    require(msg.value >= fprice, "Insufficient amount sent! :(");
+    require(msg.sender == ethStorage.getFuncDev(name), "You are not the owner of the function!");
+
+    getNewId();
+    escrow.deposit{value: fprice}(msg.sender, ownerAddress, fprice, requestId);
+    bool modified = ethStorage.modifyFuncDescr(name, descr);
+    if(modified == true)
+      emit resultOk("The function's description has been successfully modified!", requestId);
+    else
+      emit resultOk("The function's description couldn't be modified :(", requestId);
+  }
+
   /**
   * @dev forwards the deployment result, only callable from 
   *     "Etherless" server address, emits deployOk or 
