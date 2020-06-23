@@ -102,7 +102,7 @@ contract EtherlessSmart is Initializable {
   function editFunction(string memory name, string memory signature, string memory funcHash) public payable {
     require(ethStorage.existsFunction(name) == true, "The function you're looking for does not exist! :'(");
     require(msg.value >= fprice, "Insufficient amount sent! :(");
-    require(msg.sender == ethStorage.getFuncDev(), "You are not the owner of the function!");
+    require(msg.sender == ethStorage.getFuncDev(name), "You are not the owner of the function!");
 
     getNewId();
     escrow.deposit{value: fprice}(msg.sender, ownerAddress, fprice, requestId);
