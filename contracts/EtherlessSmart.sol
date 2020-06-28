@@ -21,7 +21,7 @@ contract EtherlessSmart is Initializable {
 
   //events
   event deployRequest(string funcname, string signature, string funchash, uint256 indexed id);
-  event runRequest(string funcname, string param, uint256 indexed id);
+  event runRequest(string funcname, string param, address indexed addr, uint256 indexed id);
   event deleteRequest(string funcname, uint256 indexed id);
   event editRequest(string name, string signature, string funcHash, uint256 indexed requestId);
   event resultOk(string result, uint256 indexed id);
@@ -48,7 +48,6 @@ contract EtherlessSmart is Initializable {
   }
 
   //[DEPLOY] adds a function to the list
-
   /**
   * @dev forwards the deployment request for a function, emits deployRequest event
   * @param name: name of the function to deploy
@@ -82,9 +81,10 @@ contract EtherlessSmart is Initializable {
     //contractBalance += msg.value;
     getNewId();
     escrow.deposit{value: funcPrice}(msg.sender, funcDev, funcPrice, requestId);
-    emit runRequest(funcName, param, requestId);
+    emit runRequest(funcName, param, msg.sender, requestId);
   }
 
+  // [DELETE] deleteFunction -> requests the deletion of a function
   /**
   * @dev forwards the deletion request for a specified function, emits deleteRequest event
   * @param name: name of the function to delete
@@ -99,6 +99,13 @@ contract EtherlessSmart is Initializable {
     emit deleteRequest(name, requestId);
   }
 
+  //[EDIT] editFunction -> requests modification of the function
+  /**
+  * @dev forwards the modification request for a specified function, emits editRequest event
+  * @param name: name of the function to modify
+  * @param signature: signature of the function to be modified
+  * @param funchash: should contain the IPFS hash of the function code
+  */
   function editFunction(string memory name, string memory signature, string memory funcHash) public payable {
     require(ethStorage.existsFunction(name) == true, "The function you're looking for does not exist! :'(");
     require(msg.value >= fprice, "Insufficient amount sent! :(");
@@ -109,6 +116,12 @@ contract EtherlessSmart is Initializable {
     emit editRequest(name, signature, funcHash, requestId);
   }
 
+  //[EDIT] editFuncDescr -> requests modification of the function's description
+  /**
+  * @dev forwards the modification request for a specified function's description, emits either resultOk or resultError event
+  * @param name: name of the function to be modified
+  * @param descr: should contain the new description
+  */
   function editFunctionDescr(string memory name, string memory descr) public payable {
     require(ethStorage.existsFunction(name) == true, "The function you're looking for does not exist! :'(");
     require(msg.value >= fprice, "Insufficient amount sent! :(");
@@ -120,7 +133,7 @@ contract EtherlessSmart is Initializable {
     if(modified == true)
       emit resultOk("The function's description has been successfully modified!", requestId);
     else
-      emit resultOk("The function's description couldn't be modified :(", requestId);
+      emit resultError("The function's description couldn't be modified :(", requestId);
   }
 
   /**
@@ -163,13 +176,13 @@ contract EtherlessSmart is Initializable {
   }
   
   /**
-  * @dev forwards the run result, only callable from 
-  *     "Etherless" server address, emits deleteOk or 
-  *      deleteError events based on the parameter "succesful"
+  * @dev forwards the delete result, only callable from 
+  *     "Etherless" server address, emits resultOk or 
+  *      resultError events based on the parameter "succesful"
   * @param message: result message string
-  * @param name: name of the deployment function
+  * @param name: name of the function to be deleted
   * @param id: id of the run request
-  * @param successful: indicates the success or failure of the respective run request
+  * @param successful: indicates the success or failure of the respective delete request
   */
   function deleteResult(string memory message, string memory name, uint256 id, bool successful) public onlyServer(msg.sender) {
     if(successful == true) {
@@ -183,6 +196,15 @@ contract EtherlessSmart is Initializable {
     }
   }
 
+  /**
+  * @dev forwards the edit result, only callable from 
+  *     "Etherless" server address, emits resultOk or 
+  *      reultError events based on the parameter "succesful"
+  * @param message: result message string
+  * @param name: name of the function to be modified
+  * @param id: id of the run request
+  * @param successful: indicates the success or failure of the respective edit request
+  */
   function editResult(string memory message, string memory name, string memory signature, uint256 id, bool successful) public onlyServer(msg.sender) {
     if(successful == true) {
       escrow.withdraw(escrow.getBeneficiary(id), id);
