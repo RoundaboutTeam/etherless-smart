@@ -104,7 +104,7 @@ contract EtherlessSmart is Initializable {
   * @dev forwards the modification request for a specified function, emits editRequest event
   * @param name: name of the function to modify
   * @param signature: signature of the function to be modified
-  * @param funchash: should contain the IPFS hash of the function code
+  * @param funcHash: should contain the IPFS hash of the function code
   */
   function editFunction(string memory name, string memory signature, string memory funcHash) public payable {
     require(ethStorage.existsFunction(name) == true, "The function you're looking for does not exist! :'(");
