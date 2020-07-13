@@ -128,4 +128,15 @@ contract('EtherlessStorage', (accounts) => {
         assert.equal(isnotequal, expected_f, 'strings were not compared correctly');
         assert.equal(isequal, expected_f, 'strings were not compared correctly');
     });*/
+
+    it('should edit the function signature', async () => {
+        const fname = "test_func";
+        const newsign = "new sign";
+        const expected = "{\"name\":\"test_func\",\"signature\":\"" + newsign +"\",\"price\":\"10\",\"description\":\"description\",\"developer\":\"" + pippo + "\"}";
+        await storage.insertNewFunction(fname, "sign", 10, pippo, "description", { from: pippo });
+        await storage.insertInArray(fname, { from: pippo });
+        await storage.modifyFunction(fname, newsign, { from: pippo });
+        const info = await storage.getFuncInfo(fname);
+        assert.equal(info, expected.toLowerCase(), 'developer is not the expected address');
+    });
 });

@@ -1,11 +1,11 @@
 {
   "contracts": {
     "EtherlessSmart": {
-      "address": "0x150D2E8216cEFABD2F0Cdd9898C1F558504e30be",
-      "constructorCode": "608060405234801561001057600080fd5b506148fc806100206000396000f3fe",
-      "bodyBytecodeHash": "f2e207f825d45019c5ed7b11924611fb98681ea6f22663e6e952141cc4e6c183",
-      "localBytecodeHash": "cf35ec8348007724b9374877d53ec69194c7c12d57b44eded29346a016b9666e",
-      "deployedBytecodeHash": "cf35ec8348007724b9374877d53ec69194c7c12d57b44eded29346a016b9666e",
+      "address": "0x3EC2233Cca06b1FE96Db277FF1d0dA6D646FC0c6",
+      "constructorCode": "608060405234801561001057600080fd5b50614916806100206000396000f3fe",
+      "bodyBytecodeHash": "ce6c3cb43d46803081f5817cec20801fc0c5b918473944e852fac0e1f42400d2",
+      "localBytecodeHash": "ff9e8fda3507f734f775e7a4f3c580ef7e2bbbba5e51f3067332945cfaa56db2",
+      "deployedBytecodeHash": "ff9e8fda3507f734f775e7a4f3c580ef7e2bbbba5e51f3067332945cfaa56db2",
       "types": {
         "t_bool": {
           "id": "t_bool",
@@ -40,7 +40,7 @@
           "contract": "Initializable",
           "path": "@openzeppelin\\contracts-ethereum-package\\contracts\\Initializable.sol",
           "label": "initialized",
-          "astId": 1780,
+          "astId": 1818,
           "type": "t_bool",
           "src": "757:24:5"
         },
@@ -48,7 +48,7 @@
           "contract": "Initializable",
           "path": "@openzeppelin\\contracts-ethereum-package\\contracts\\Initializable.sol",
           "label": "initializing",
-          "astId": 1782,
+          "astId": 1820,
           "type": "t_bool",
           "src": "876:25:5"
         },
@@ -56,7 +56,7 @@
           "contract": "Initializable",
           "path": "@openzeppelin\\contracts-ethereum-package\\contracts\\Initializable.sol",
           "label": "______gap",
-          "astId": 1847,
+          "astId": 1885,
           "type": "t_array:50<t_uint256>",
           "src": "1982:29:5"
         },
@@ -128,11 +128,11 @@
       }
     },
     "EtherlessStorage": {
-      "address": "0x80F8b9982E652261D179046354B8863852E350c7",
-      "constructorCode": "608060405234801561001057600080fd5b5061228c806100206000396000f3fe",
-      "bodyBytecodeHash": "d7be4861adc5c57820840d0dca45b15832bbd24a3f82ea4a8f606b3afbe2ddb1",
-      "localBytecodeHash": "34808ed2af2e752c58ab32ab433ab948f20ed17298ab78cc6c69845ce64647a6",
-      "deployedBytecodeHash": "34808ed2af2e752c58ab32ab433ab948f20ed17298ab78cc6c69845ce64647a6",
+      "address": "0x89a2deE03b2F49558A6a0d49F756ff15E53482c4",
+      "constructorCode": "608060405234801561001057600080fd5b50612438806100206000396000f3fe",
+      "bodyBytecodeHash": "dbfb70b8bc28ccf997938a57cf611c4623bbaad054f397d106ab606fffe25e08",
+      "localBytecodeHash": "5bf8fb57faded76ccc6b62477b03b4af2b1eae8ca722c8feb5eaf22991338592",
+      "deployedBytecodeHash": "5bf8fb57faded76ccc6b62477b03b4af2b1eae8ca722c8feb5eaf22991338592",
       "types": {
         "t_struct<EtherlessStorage.jsFunction>": {
           "id": "t_struct<EtherlessStorage.jsFunction>",
@@ -141,37 +141,37 @@
           "members": [
             {
               "label": "name",
-              "astId": 931,
+              "astId": 938,
               "type": "t_string",
               "src": "92:11:2"
             },
             {
               "label": "signature",
-              "astId": 933,
+              "astId": 940,
               "type": "t_string",
               "src": "110:16:2"
             },
             {
               "label": "price",
-              "astId": 935,
+              "astId": 942,
               "type": "t_uint256",
               "src": "170:13:2"
             },
             {
               "label": "developer",
-              "astId": 937,
+              "astId": 944,
               "type": "t_address_payable",
               "src": "197:25:2"
             },
             {
               "label": "description",
-              "astId": 939,
+              "astId": 946,
               "type": "t_string",
               "src": "229:18:2"
             },
             {
               "label": "exists",
-              "astId": 941,
+              "astId": 948,
               "type": "t_bool",
               "src": "254:11:2"
             }
@@ -216,7 +216,7 @@
           "contract": "EtherlessStorage",
           "path": "..\\..\\..\\..\\..\\C\\Users\\verof\\Documents\\GitHub\\etherless-smart\\contracts\\EtherlessStorage.sol",
           "label": "availableFunctions",
-          "astId": 946,
+          "astId": 953,
           "type": "t_mapping<t_struct<EtherlessStorage.jsFunction>>",
           "src": "277:57:2"
         },
@@ -224,7 +224,7 @@
           "contract": "EtherlessStorage",
           "path": "..\\..\\..\\..\\..\\C\\Users\\verof\\Documents\\GitHub\\etherless-smart\\contracts\\EtherlessStorage.sol",
           "label": "functionNames",
-          "astId": 949,
+          "astId": 956,
           "type": "t_array:dyn<t_string>",
           "src": "391:22:2"
         }
@@ -240,7 +240,7 @@
             "contract": "EtherlessStorage",
             "path": "..\\..\\..\\..\\..\\C\\Users\\verof\\Documents\\GitHub\\etherless-smart\\contracts\\EtherlessStorage.sol",
             "label": "availableFunctions",
-            "astId": 946,
+            "astId": 953,
             "type": "t_mapping<t_struct<EtherlessStorage.jsFunction>>",
             "src": "277:57:2"
           }
@@ -276,7 +276,14 @@
       {
         "address": "0xf63f7e99C9662daC1349C0371aac3041B1a62A1A",
         "version": "1.0.0",
-        "implementation": "0x80F8b9982E652261D179046354B8863852E350c7",
+        "implementation": "0x89a2deE03b2F49558A6a0d49F756ff15E53482c4",
+        "admin": "0x898b4F4fDd5e36CfbA3bB6af2aA53561B39fEBB5",
+        "kind": "Upgradeable"
+      },
+      {
+        "address": "0xe1F50d997d01df2793355Ed5C342B64fEEaEe6CB",
+        "version": "1.0.0",
+        "implementation": "0x89a2deE03b2F49558A6a0d49F756ff15E53482c4",
         "admin": "0x898b4F4fDd5e36CfbA3bB6af2aA53561B39fEBB5",
         "kind": "Upgradeable"
       }
@@ -299,7 +306,7 @@
       {
         "address": "0x0096E8C3052940C01E9663A95D4A981D8BA155c4",
         "version": "1.0.0",
-        "implementation": "0x150D2E8216cEFABD2F0Cdd9898C1F558504e30be",
+        "implementation": "0x3EC2233Cca06b1FE96Db277FF1d0dA6D646FC0c6",
         "admin": "0x898b4F4fDd5e36CfbA3bB6af2aA53561B39fEBB5",
         "kind": "Upgradeable"
       }

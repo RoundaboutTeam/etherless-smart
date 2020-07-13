@@ -56,7 +56,7 @@ contract EtherlessSmart is Initializable {
   * @param funchash: should contain the IPFS hash of the function code
   */
   function deployFunction(string memory name, string memory signature, string memory description, string memory funchash) public payable {
-    require(ethStorage.existsFunction(name) == false, "A function with the same name already exist!");
+    require(ethStorage.isDeploying(name) == false, "A function with the same name already exist or is already being deployed!");
     require(msg.value >= fprice, "Insufficient amount sent! :(");
 
     getNewId();
@@ -80,6 +80,7 @@ contract EtherlessSmart is Initializable {
     require(msg.value >= funcPrice, "Insufficient amount sent! :'(");
     //contractBalance += msg.value;
     getNewId();
+    funcPrice = funcPrice*80/100;
     escrow.deposit{value: funcPrice}(msg.sender, funcDev, funcPrice, requestId);
     emit runRequest(funcName, param, msg.sender, requestId);
   }
