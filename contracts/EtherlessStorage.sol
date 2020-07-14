@@ -19,9 +19,18 @@ struct jsFunction {
   //existsFunction -> checks if a certain function is in the availableFunctions list
   function existsFunction(string memory name) public view returns (bool) {
     for (uint index = 0; index < functionNames.length; index++) {
-        if(compareString(functionNames[index], name)){
+        if(compareString(functionNames[index], name) && availableFunctions[name].exists){
             return true;
         }
+    }
+    return false;
+  }
+
+  //FUNCTIONS THAT IMPLEMENT OPERATIONS ON THE AVAILABLEFUNCTIONS LIST
+  //existsFunction -> checks if a certain function is in the availableFunctions list
+  function isDeploying(string memory name) public view returns (bool) {
+    if(availableFunctions[name].exists){
+        return true;
     }
     return false;
   }
@@ -50,6 +59,17 @@ function insertInArray(string memory name) public {
                 functionNames.pop();
             }
         }
+    }
+
+    function modifyFunction(string memory name, string memory newSignature) public {
+        availableFunctions[name].signature = newSignature;
+    }
+
+    function modifyFuncDescr(string memory name, string memory newDescription) public returns (bool){
+        availableFunctions[name].description = newDescription;
+        if(compareString(availableFunctions[name].description, newDescription) == true)
+            return true;
+        else return false;
     }
 
     //returns the function price
