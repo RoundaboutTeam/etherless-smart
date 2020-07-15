@@ -121,6 +121,15 @@ contract('EtherlessSmart', (accounts) => {
         );
     });
 
+    it('should limit the access to editResult', async () => {
+        const fname = "test_func";
+        const fsign = "test_func_signature";
+        await expectRevert(
+            instance.editResult("edit result message", fname, fsign, 1, true, { from: pluto }),
+            "You are not the designated address!",
+        );
+    });
+
     it('should emit the event for succesful runResult', async () => {
         const expected = true;
         const fname = "test_func";
@@ -206,5 +215,27 @@ contract('EtherlessSmart', (accounts) => {
 
         const info = await storage.getFuncInfo(fname);
         assert.equal(info, expected.toLowerCase(), 'developer is not the expected address');
+    });
+
+    it('should return the function cost', async () => {
+        const fname = "test_func";
+        const newsign = "new sign";
+        //const expected = "{\"name\":\"test_func\",\"signature\":\"sign\",\"price\":\"10\",\"description\":\"description\",\"developer\":\"" + pippo + "\"}";
+        const expected = 10;
+        await storage.insertNewFunction(fname, "sign", 10, pippo, "description", { from: pippo });
+        await storage.insertInArray(fname, { from: pippo });
+        const cost = await instance.getCost( fname, { from: pippo });
+
+        assert.equal(cost, expected, 'developer is not the expected address');
+    });
+    
+    it('should return the function info', async () => {
+        const fname = "test_func";
+        const expected = "{\"name\":\"" + fname + "\",\"signature\":\"sign\",\"price\":\"15\",\"description\":\"desc\",\"developer\":\"" + pippo + "\"}";
+        await storage.insertNewFunction(fname, "sign", 15, pippo, "desc");
+        await storage.insertInArray(fname);
+        const cost = await instance.getInfo( fname, { from: pippo });
+
+        assert.equal(cost, expected.toLowerCase(), 'the function info is not as expected');
     });
 });
