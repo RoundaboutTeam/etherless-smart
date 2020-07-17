@@ -23,9 +23,8 @@
 //
 // const fs = require('fs');
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
-
+require('dotenv').config();
 const HDWalletProvider = require('@truffle/hdwallet-provider');
-const mnemonic = "onion addict episode afraid budget crawl voyage draft skirt display sock electric";
 
 module.exports = {
   /**
@@ -53,7 +52,7 @@ module.exports = {
      },
     ropsten: {
       provider: function () {
-        return new HDWalletProvider(mnemonic, "https://ropsten.infura.io/v3/6877297dbea14c3787c7a830a49fcb3c");
+        return new HDWalletProvider(process.env.MNENOMIC, "https://ropsten.infura.io/v3/" + process.env.INFURA_API_KEY);
       },
       network_id: '3',
       gasPrice: 20000000000
