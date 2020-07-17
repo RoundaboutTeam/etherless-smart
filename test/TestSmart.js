@@ -133,7 +133,6 @@ contract('EtherlessSmart', (accounts) => {
     it('should emit the event for succesful runResult', async () => {
         const expected = true;
         const fname = "test_func";
-        //await instance.deployFunction(fname, "sign", "description", "hash", { from: pluto, value: 10 });
         const receipt = await instance.runResult("success message", 1, true,{ from: pippo});
         expectEvent(receipt, 'resultOk', { result: "success message", id: new BN(1) });
     });
@@ -141,8 +140,11 @@ contract('EtherlessSmart', (accounts) => {
     it('should emit the event for succesful deployResult', async () => {
         const expected = true;
         const fname = "test_func";
-        //await instance.deployFunction(fname, "sign", "description", "hash", { from: pluto, value: 10 });
+        const expcInfo = "{\"name\":\"" + fname + "\",\"signature\":\"sign\",\"price\":\"10\",\"description\":\"desc\",\"developer\":\"" + pluto + "\"}"
+        await instance.deployFunction(fname, "sign", "desc", "hash", { from: pluto, value: 10 });
         const receipt = await instance.deployResult("success message", fname, 1, true,{ from: pippo});
+        const info = await instance.getInfo(fname);
+        assert.equal(info, expcInfo.toLowerCase(), 'function was not deployed correctly');
         expectEvent(receipt, 'resultOk', { result: "success message", id: new BN(1) });
     });
 
