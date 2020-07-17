@@ -1,5 +1,5 @@
+require('dotenv').config();
 const HDWalletProvider = require('@truffle/hdwallet-provider');
-const mnemonic = "onion addict episode afraid budget crawl voyage draft skirt display sock electric";
 
 module.exports = {
     networks: {
@@ -13,7 +13,7 @@ module.exports = {
         },
         ropsten: {
             provider: function () {
-                return new HDWalletProvider(mnemonic, "https://ropsten.infura.io/v3/8a157000ad9148529a02513177b904bd");
+                return new HDWalletProvider(process.env.MNENOMIC, "https://ropsten.infura.io/v3/" + process.env.INFURA_API_KEY);
             },
             network_id: '3',
             gasPrice: 20000000000,

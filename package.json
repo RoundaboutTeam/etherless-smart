@@ -1,6 +1,6 @@
 {
   "name": "etherless-smart",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Module that handles etherless-cli &lt;->​ etherless-server communication (and payment of this work)",
   "main": "truffle-config.js",
   "directories": {

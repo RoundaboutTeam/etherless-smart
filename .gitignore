@@ -2,6 +2,8 @@ node_modules
 build
 coverage
 coverage.json
+.env
+.openzeppelin/dev-*.json
 .openzeppelin/.session
 
 .openzeppelin\.session
