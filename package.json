@@ -27,7 +27,7 @@
     "ethers": "^4.0.47",
     "ganache": "^6.4.4",
     "ganache-cli": "^6.9.1",
-    "minimist": "^1.2.5",
+    "minimist": "^1.2.6",
     "solc": "^0.6.8",
     "truffle": "^5.1.27",
     "truffle-hdwallet-provider": "^1.0.17",
